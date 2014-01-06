@@ -47,8 +47,8 @@ class Simulator(object):  # Global multiprocessing only
 
         if drawing:
             from simulator.drawer import CairoDrawer
-            from simulator.drawer import PILDrawer
             self.drawer = CairoDrawer.CairoDrawer(self, stop)
+            # from simulator.drawer import PILDrawer
             # self.drawer = PILDrawer.PILDrawer(self, stop)
         else:
             self.drawer = None

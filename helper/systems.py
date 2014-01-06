@@ -280,7 +280,8 @@ DITPaperExample = Task.TaskSystem(tasks)
 
 # test
 tasks = []
-tasks.append(Task.Task(2, 1, 3, 4, alpha=0))
-tasks.append(Task.Task(0, 1, 3, 4, alpha=0))
+tasks.append(Task.Task(0, 1, 3, 3, alpha=2))
+tasks.append(Task.Task(0, 4, 30, 30, alpha=2))
+tasks.append(Task.Task(0, 1, 12, 12, alpha=2))
 
 test = Task.TaskSystem(tasks)

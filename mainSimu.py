@@ -32,13 +32,13 @@ stop = Omax + 4 * H
 print(("stop", stop))
 
 # scheduler = Scheduler.EDF(tau)
-scheduler = Scheduler.LLF(tau)
+# scheduler = Scheduler.LLF(tau)
 # scheduler = Scheduler.SpotlightEDF(tau)
 # scheduler = ChooseKeepEDF.ChooseKeepEDF(tau)
 # scheduler = Scheduler.PTEDF(tau)
 # scheduler = PALLF.PALLF(tau)
 # scheduler = Scheduler.ArbitraryScheduler(tau, systems.mpanaSchedule)
-# scheduler = LBLScheduler.LBLEDF(tau)
+scheduler = LBLScheduler.LBLEDF(tau)
 
 # scheduler = Scheduler.FixedPriority(tau, [1, 2, 3])
 # !!! exhaustive: set the parameters right !!!
