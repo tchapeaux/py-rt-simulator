@@ -5,7 +5,7 @@ import pickle
 
 symbols = ['D', 'o', 's', '*', 'v', '^']
 with open('mainSimuComp_results.pickle', 'rb') as inputR:
-    (domin_scores, scores, NUMBER_OF_SYSTEMS, uRange, schedulers, names, failures) = pickle.load(inputR)
+    (domin_scores, scores, NUMBER_OF_SYSTEMS, uRange, schedulers, names, generate_synchronous_only, failures) = pickle.load(inputR)
 
 pylab.figure()
 for i, sched in enumerate(schedulers):
@@ -17,7 +17,9 @@ for i, sched in enumerate(schedulers):
 
 pylab.ylabel("% schedulable")
 pylab.xlabel("System utilization")
-pylab.title("Schedulability of implicit systems (n = " + str(NUMBER_OF_SYSTEMS) + ")")
+arrivalTypeString = "synchronous" if generate_synchronous_only else "asynchronous"
+graph_title = "Schedulability of implicit " + arrivalTypeString + " systems (n = " + str(NUMBER_OF_SYSTEMS) + ")"
+pylab.title(graph_title)
 pylab.legend(loc=0)
 pylab.axis([uRange[0] - 0.1, uRange[-1] + 0.1, 0,  100])
 pylab.grid()
