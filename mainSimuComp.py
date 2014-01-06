@@ -44,8 +44,8 @@ def oneTest(utilization):
 
 domin_scores = {}
 scores = {}
-NUMBER_OF_SYSTEMS = 100
-uRange = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6]
+NUMBER_OF_SYSTEMS = 10
+uRange = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7]
 schedulers = [LBLScheduler.LBLEDF, Scheduler.EDF]
 names = ["PA-EDF", "EDF"]
 generate_synchronous_only = False
