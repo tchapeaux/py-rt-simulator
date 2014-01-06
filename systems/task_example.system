@@ -1,0 +1,9 @@
+# Example system
+# Line starting with '#' are ignored
+# Blank lines are ignored
+
+# Task format: (O, C, D, T, alpha)
+# Do not forget the space after each comas!
+(1, 2, 3, 4, 0)
+(3, 2, 6, 10, 0)
+(0, 1, 4, 10, 0)

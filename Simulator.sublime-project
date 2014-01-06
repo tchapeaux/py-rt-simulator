@@ -1,0 +1,28 @@
+{
+    "folders":
+    [
+        {
+            "follow_symlinks": true,
+            "path": "./",
+            "folder_exclude_patterns": ["plots", "GLPK", "Output", "__pycache__"],
+            "file_exclude_patterns":
+            [
+                "*.pyc",
+                "*.pyo",
+                "*.pickle",
+                "__init__.py",
+                "*.tmp",
+                ".pydevproject",
+                ".project"
+            ]
+        }
+    ],
+    "build_systems":
+    [
+        {
+            "name": "Python3",
+            "cmd": ["python3", "-u", "$file"],
+            "file_regex": "^[ ]*File \"(...*?)\", line ([0-9]*)"
+        }
+    ]
+}
