@@ -57,9 +57,9 @@ def generateTasksFrom(utilizations, T_LCM, Tmin, Tmax, preemptionCost, synchrono
     for u in utilizations:
         O = 0 if synchronous else max(0, int(random.normalvariate(Tmin, (Tmax-Tmin)/2)))
         T = random.randrange(Tmin, Tmax) if T_LCM == -1 else random.choice(divisors)
-        C = max(1, int(round(math.floor(u*T))))
-        D = random.randint(int(T-(T-C)*constrDeadlineFactor), T)
-        a = preemptionCost if preemptionCost >= 0 else random.randrange(0,5)
+        C = max(1, int(round(math.floor(u * T))))
+        D = random.randint(int(T - (T - C) * constrDeadlineFactor), T)
+        a = preemptionCost if preemptionCost >= 0 else random.randrange(0, 5)
         tasks.append(Task.Task(O, C, D, T, a))
 
     # translate offset so that Omin=0
