@@ -37,6 +37,7 @@ class TestSimulator(unittest.TestCase):
         sched = Scheduler.EDF(tau)
         simulator = getLaunchedSimu(tau, sched)
         self.assertTrue(simulator.success())
+        self.assertTrue(simulator.isStable)
         self.assertEqual(simulator.t, 46)
 
 
