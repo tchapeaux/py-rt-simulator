@@ -1,8 +1,43 @@
 from simulator import Simulator
 from simulator.scheduler import Scheduler, ChooseKeepEDF, PALLF
 from helper import systems
+from model import algorithms
 
 import unittest
+
+
+def getLaunchedSimu(tau, sched):
+    Omax = max([task.O for task in tau.tasks])
+    H = tau.hyperPeriod()
+    fpdit = algorithms.findFirstDIT(tau)
+    stop = 0
+    if fpdit:
+        stop = fpdit + 2 * H
+    else:
+        stop = Omax + 10 * H  # FIXME but cleverly if possible
+
+    simulator = Simulator.Simulator(tau, stop, nbrCPUs=1, scheduler=sched, abortAndRestart=False, verbose=False, drawing=False)
+    simulator.run()
+    return simulator
+
+
+class TestSimulator(unittest.TestCase):
+    def setUp(self):
+        pass
+
+    def testStopAtDeadlineMiss(self):
+        tau = systems.MustIdle
+        sched = Scheduler.EDF(tau)
+        simulator = getLaunchedSimu(tau, sched)
+        self.assertFalse(simulator.success())
+        self.assertEqual(simulator.t, 5)
+
+    def testStopAtStableConfig(self):
+        tau = systems.LongTransitive2
+        sched = Scheduler.EDF(tau)
+        simulator = getLaunchedSimu(tau, sched)
+        self.assertTrue(simulator.success())
+        self.assertEqual(simulator.t, 46)
 
 
 class TestSimulatorWithKnownSystems(unittest.TestCase):
@@ -10,13 +45,7 @@ class TestSimulatorWithKnownSystems(unittest.TestCase):
         pass
 
     def checkResult(self, tau, sched, expectedResult):
-        Omax = max([task.O for task in tau.tasks])
-        H = tau.hyperPeriod()
-        # fpdit = algorithms.findFirstDIT(tau)
-        stop = Omax + 10 * H
-
-        simulator = Simulator.Simulator(tau, stop, nbrCPUs=1, scheduler=sched, abortAndRestart=False, verbose=False, drawing=False)
-        simulator.run()
+        simulator = getLaunchedSimu(tau, sched)
         self.assertIs(simulator.success(), expectedResult)
 
     def test_UnfeasibleLongTransitive(self):
