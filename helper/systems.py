@@ -4,22 +4,22 @@ from model import TaskGenerator
 
 
 def generateSystemArray(numberOfSystems, constrDeadlineFactor, synchronous=False, n=4, preemptionCost=2, verbose=False):
-	systemArray = []
-	for i in range(numberOfSystems):
-		Umin = 0.55
-		Umax = 0.95
-		Utot = 1.0*random.randint(int(Umin*100), int(Umax*100))/100
-		maxHyperT = 360  # PPCM(2, 3, 5, 6, 8, 9, 10, 12, 14, 15, 16, 18, 20, 22, 24, 25, 28, 30, 32)
-		# maxHyperT = -1
-		Tmin = 3
-		Tmax = 50
-		tasks = TaskGenerator.generateTasks(Utot, n, maxHyperT, Tmin, Tmax, preemptionCost=preemptionCost, synchronous=synchronous, constrDeadlineFactor=constrDeadlineFactor)
-		if (verbose and numberOfSystems <= 10):
-			print(("Generated task system # ", i))
-			for task in tasks:
-					print(("\t", task))
-		systemArray.append(Task.TaskSystem(tasks))
-	return systemArray
+    systemArray = []
+    for i in range(numberOfSystems):
+        Umin = 0.55
+        Umax = 0.95
+        Utot = 1.0*random.randint(int(Umin*100), int(Umax*100))/100
+        maxHyperT = 360  # PPCM(2, 3, 5, 6, 8, 9, 10, 12, 14, 15, 16, 18, 20, 22, 24, 25, 28, 30, 32)
+        # maxHyperT = -1
+        Tmin = 3
+        Tmax = 50
+        tasks = TaskGenerator.generateTasks(Utot, n, maxHyperT, Tmin, Tmax, preemptionCost=preemptionCost, synchronous=synchronous, constrDeadlineFactor=constrDeadlineFactor)
+        if (verbose and numberOfSystems <= 10):
+            print(("Generated task system # ", i))
+            for task in tasks:
+                    print(("\t", task))
+        systemArray.append(Task.TaskSystem(tasks))
+    return systemArray
 
 
 # SmallExample
