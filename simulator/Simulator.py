@@ -137,6 +137,16 @@ class Simulator(object):  # Global multiprocessing only
         self.updatePriorities()
         self.updateHeaps()
 
+    def checkForStableConfig(self):
+        if self.t > self.system.omax() and (self.t - self.system.omax()) % self.system.hyperPeriod() == 0:
+            if self.lastConfig is not None and self.checkConfig() is True:
+                self.isStable = True
+                if self.verbose:
+                    print("Stable Config !")
+            else:
+                self.isStable = False
+            self.saveConfiguration()
+
     def checkDeadlineMiss(self):
         for job in self.getCurrentJobs():
             assert job
@@ -209,17 +219,10 @@ class Simulator(object):  # Global multiprocessing only
         self.t += 1
         # if self.t == 2:
         #     pdb.set_trace()
-        if self.verbose: print("t=", self.t)
-        if self.t > self.system.omax() and (self.t - self.system.omax()) % self.system.hyperPeriod() == 0:
-            if self.lastConfig is not None and self.checkConfig() is True:
-                self.isStable = True
-                if self.verbose:
-                    print("Stable Config !")
-            else:
-                self.isStable = False
-            self.saveConfiguration()
+        if self.verbose: print("t =", self.t)
+        self.checkForStableConfig()
         self.scheduler.initInstant()
-        self.cleanFinishedJobs()  # remove finished job from CPUs
+        self.cleanFinishedJobs()
         self.checkDeadlineMiss()
         self.checkJobArrival()
         self.handlePreemptions()
