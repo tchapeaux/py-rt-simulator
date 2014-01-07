@@ -9,7 +9,7 @@ import subprocess
 import sys
 
 # tau = Task.TaskSystem(TaskGenerator.generateTasks(0.7, 3, 33750, 5, 20, synchronous=False, constrDeadlineFactor=0))
-tau = systems.test
+tau = systems.ImpPTEFTNonOptimal
 
 if len(sys.argv) > 1:
     with open(sys.argv[1]) as f:
@@ -35,10 +35,10 @@ print(("stop", stop))
 # scheduler = Scheduler.LLF(tau)
 # scheduler = Scheduler.SpotlightEDF(tau)
 # scheduler = ChooseKeepEDF.ChooseKeepEDF(tau)
-# scheduler = Scheduler.PTEDF(tau)
+scheduler = Scheduler.PTEDF(tau)
 # scheduler = PALLF.PALLF(tau)
 # scheduler = Scheduler.ArbitraryScheduler(tau, systems.mpanaSchedule)
-scheduler = LBLScheduler.LBLEDF(tau)
+# scheduler = LBLScheduler.LBLEDF(tau)
 
 # scheduler = Scheduler.FixedPriority(tau, [1, 2, 3])
 # !!! exhaustive: set the parameters right !!!
@@ -48,7 +48,7 @@ scheduler = LBLScheduler.LBLEDF(tau)
 # else:
 #   print "No feasible priorities found !"
 
-simu = Simulator.Simulator(tau, stop=stop, nbrCPUs=1, scheduler=scheduler, abortAndRestart=False, verbose=True)
+simu = Simulator.Simulator(tau, stop=stop, nbrCPUs=1, scheduler=scheduler, abortAndRestart=False, verbose=False)
 
 try:
     simu.run(stopAtDeadlineMiss=True, stopAtStableConfig=True)

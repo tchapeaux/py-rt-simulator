@@ -5,7 +5,7 @@ from helper import systems
 import unittest
 
 
-class TestSimulator(unittest.TestCase):
+class TestSimulatorWithKnownSystems(unittest.TestCase):
     def setUp(self):
         pass
 

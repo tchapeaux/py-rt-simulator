@@ -13,7 +13,7 @@ def oneTest(utilization):
     global generate_synchronous_only
     # print(utilization)
     Utot = utilization
-    maxHyperT = 360  # PPCM(2, 3, 5, 6, 8, 9, 10, 12, 14, 15, 16, 18, 20, 22, 24, 25, 28, 30, 32)
+    maxHyperT = 360
     # maxHyperT = -1
     Tmin = 3
     Tmax = 50
@@ -45,7 +45,7 @@ def oneTest(utilization):
 domin_scores = {}
 scores = {}
 NUMBER_OF_SYSTEMS = 10
-uRange = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7]
+uRange = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 schedulers = [LBLScheduler.LBLEDF, Scheduler.EDF]
 names = ["PA-EDF", "EDF"]
 generate_synchronous_only = False

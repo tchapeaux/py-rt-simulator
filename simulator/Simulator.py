@@ -240,9 +240,9 @@ class Simulator(object):  # Global multiprocessing only
                 if self.drawer:
                     self.drawer.drawInstant(self.t)
 
-                for missT, job in self.deadlineMisses:
-                    if missT == self.t:
-                        # new deadline miss
+                if len(self.deadlineMisses) > 0:
+                    missT, job = self.deadlineMisses[-1]
+                    if missT == self.t:  # new deadline miss
                         if self.drawer:
                             self.drawer.drawDeadlineMiss(self.t, job.task)
                         if self.verbose:
