@@ -15,7 +15,6 @@ if len(sys.argv) > 1:
     with open(sys.argv[1]) as f:
         tau = Task.TaskSystem.fromFile(f)
 
-
 Omax = max([task.O for task in tau.tasks])
 H = tau.hyperPeriod()
 fpdit = algorithms.findFirstDIT(tau)
@@ -25,7 +24,7 @@ print(("H", H))
 print(("fpdit", fpdit))
 print(("U", tau.systemUtilization()))
 
-stop = Omax + 10 * H
+stop = Omax + 50 * H
 # if fpdit:
 #     stop = fpdit + H
 

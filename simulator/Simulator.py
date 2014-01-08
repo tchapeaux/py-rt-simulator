@@ -4,7 +4,7 @@ import pdb
 from model.CPU import CPU
 from model import algorithms
 from simulator.drawer import Drawer
-from simulator.JobConfiguration import JobConfiguration
+from simulator.Configuration import SystemConfiguration
 
 
 def heappeek(heap):
@@ -25,7 +25,7 @@ class Simulator(object):  # Global multiprocessing only
             else:
                 stop = tau.omax() + tau.hyperPeriod()
         self.stop = stop + 1  # I just solved every OBOE in the world
-        self.lastConfig = None
+        self.savedConfigs = set()
 
         # CPUs are accessible via either
         # - CPUs : a list with fixed ordering
@@ -53,34 +53,20 @@ class Simulator(object):  # Global multiprocessing only
         else:
             self.drawer = None
 
-    def saveConfiguration(self):
-        jobs = self.getCurrentJobs()
-        self.lastConfig = set()
-        for job in jobs:
-            self.lastConfig.add(JobConfiguration(job, self.t))
-
-    def checkConfig(self):
-        # TODO: adapt for arbitrary deadline (make copy of lastConfig and current jobs and remove pairs)
-        assert self.lastConfig is not None, "checkConfig: save config first"
-        jobs = self.getCurrentJobs()
-        if len(self.lastConfig) != len(jobs):
-            return False
-        for jobConfig in self.lastConfig:
-            foundJob = False
-            for job in jobs:
-                if job.task is not jobConfig.task:
-                    continue
-                if self.t - job.arrival != jobConfig.activeTime:
-                    continue
-                if job.computation != jobConfig.computedTime:
-                    continue
-                if job.preemptionTimeLeft != jobConfig.preemptionTime:
-                    continue
-                foundJob = True
-                break  # try next job config
-            if not foundJob:
-                return False
-        return True
+    def checkForStableConfig(self):
+        if (self.t > self.system.omax() and
+                (self.t - self.system.omax()) % self.system.hyperPeriod() == 0):
+            currentConfig = SystemConfiguration(self.getCurrentJobs(), self.t)
+            if self.verbose:
+                print("\tTesting for stable config...")
+                print("\tSaved Configs:", currentConfig, "vs", [config for config in self.savedConfigs])
+            if currentConfig in self.savedConfigs:
+                self.isStable = True
+                if self.verbose:
+                    print("Stable Config !")
+            else:
+                self.isStable = False
+            self.savedConfigs.add(currentConfig)
 
     def activateCPUs(self):
     # move active CPU from preemptedCPUs to activeCPUsHeap
@@ -136,16 +122,6 @@ class Simulator(object):  # Global multiprocessing only
                 cpu.job = None
         self.updatePriorities()
         self.updateHeaps()
-
-    def checkForStableConfig(self):
-        if self.t > self.system.omax() and (self.t - self.system.omax()) % self.system.hyperPeriod() == 0:
-            if self.lastConfig is not None and self.checkConfig() is True:
-                self.isStable = True
-                if self.verbose:
-                    print("Stable Config !")
-            else:
-                self.isStable = False
-            self.saveConfiguration()
 
     def checkDeadlineMiss(self):
         for job in self.getCurrentJobs():
