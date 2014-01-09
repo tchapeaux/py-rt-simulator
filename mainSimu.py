@@ -9,7 +9,7 @@ import subprocess
 import sys
 
 # tau = Task.TaskSystem(TaskGenerator.generateTasks(0.7, 3, 33750, 5, 20, synchronous=False, constrDeadlineFactor=0))
-tau = systems.LongTransitive2
+tau = systems.LongTransitive
 
 if len(sys.argv) > 1:
     with open(sys.argv[1]) as f:
@@ -19,16 +19,16 @@ Omax = max([task.O for task in tau.tasks])
 H = tau.hyperPeriod()
 fpdit = algorithms.findFirstDIT(tau)
 
-print(("Omax", Omax))
-print(("H", H))
-print(("fpdit", fpdit))
-print(("U", tau.systemUtilization()))
+print("Omax", Omax)
+print("H", H)
+print("fpdit", fpdit)
+print("U", tau.systemUtilization())
 
 stop = Omax + 50 * H
 # if fpdit:
 #     stop = fpdit + H
 
-print(("stop", stop))
+print("stop", stop)
 
 scheduler = Scheduler.EDF(tau)
 # scheduler = Scheduler.LLF(tau)
