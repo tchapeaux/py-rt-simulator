@@ -9,7 +9,7 @@ import subprocess
 import sys
 
 # tau = Task.TaskSystem(TaskGenerator.generateTasks(0.7, 3, 33750, 5, 20, synchronous=False, constrDeadlineFactor=0))
-tau = systems.LongTransitive
+tau = systems.LongTransitive3
 
 if len(sys.argv) > 1:
     with open(sys.argv[1]) as f:
@@ -24,7 +24,7 @@ print("H", H)
 print("fpdit", fpdit)
 print("U", tau.systemUtilization())
 
-stop = Omax + 50 * H
+stop = Omax + 10 * H
 # if fpdit:
 #     stop = fpdit + H
 
@@ -47,10 +47,10 @@ scheduler = Scheduler.EDF(tau)
 # else:
 #   print "No feasible priorities found !"
 
-simu = Simulator.Simulator(tau, stop=stop, nbrCPUs=1, scheduler=scheduler, abortAndRestart=False, verbose=False)
+simu = Simulator.Simulator(tau, stop=stop, nbrCPUs=1, scheduler=scheduler, abortAndRestart=False, verbose=True)
 
 try:
-    simu.run(stopAtDeadlineMiss=True, stopAtStableConfig=True)
+    simu.run(stopAtDeadlineMiss=True, stopAtStableConfig=False)
     if simu.success():
         print("Success.")
     else:
