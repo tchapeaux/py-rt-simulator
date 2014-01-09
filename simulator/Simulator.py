@@ -25,7 +25,7 @@ class Simulator(object):  # Global multiprocessing only
             else:
                 stop = tau.omax() + tau.hyperPeriod()
         self.stop = stop + 1  # I just solved every OBOE in the world
-        self.savedConfigs = set()
+        self.savedConfigs = []
 
         # CPUs are accessible via either
         # - CPUs : a list with fixed ordering
@@ -54,19 +54,23 @@ class Simulator(object):  # Global multiprocessing only
             self.drawer = None
 
     def checkForStableConfig(self):
+        if self.isStable:
+            return
+
         if (self.t > self.system.omax() and
                 (self.t - self.system.omax()) % self.system.hyperPeriod() == 0):
             currentConfig = SystemConfiguration(self.getCurrentJobs(), self.t)
             if self.verbose:
-                print("\tTesting for stable config...")
-                print("\tSaved Configs:", currentConfig, "vs", [config for config in self.savedConfigs])
-            if currentConfig in self.savedConfigs:
-                self.isStable = True
-                if self.verbose:
-                    print("Stable Config !")
-            else:
-                self.isStable = False
-            self.savedConfigs.add(currentConfig)
+                print("\tTesting for stable config.")
+                print("This config", currentConfig, "vs. saved configs:")
+                print("\n".join([str(conf) for conf in self.savedConfigs]))
+            for i, previousConfig in enumerate(self.savedConfigs):
+                if currentConfig == previousConfig:
+                    self.isStable = True
+                    periodLength = len(self.savedConfigs) - i
+                    if self.verbose:
+                        print("Stable Config ! Period is", periodLength, "H")
+            self.savedConfigs.append(currentConfig)
 
     def activateCPUs(self):
     # move active CPU from preemptedCPUs to activeCPUsHeap
@@ -245,3 +249,11 @@ class Simulator(object):  # Global multiprocessing only
                 print("FAILURE: stable schedule not attained")
             return False
         return True
+
+    def permanentPeriodLength(self):
+        """ return length of the permanent period in number of hyperiod"""
+        assert self.isStable is True, "Simulator.permanentPeriodLength: call run() first"
+        lastConfig = self.savedConfigs[-1]
+        for i, previousConfig in enumerate(self.savedConfigs[:-1]):
+            if lastConfig == previousConfig:
+                return len(self.savedConfigs[:-1]) - i

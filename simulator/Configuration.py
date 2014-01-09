@@ -62,7 +62,7 @@ class SystemConfiguration(object):
 
     def __repr__(self):
         reprString = "System Config:\n"
-        reprString += "\n".join([str(jC) for jC in self.jobConfigs])
+        reprString += ", ".join([str(jC) for jC in self.jobConfigs])
         if len(self.jobConfigs) == 0:
             reprString += "Empty!"
         return reprString
