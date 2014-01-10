@@ -118,7 +118,6 @@ tasks.append(Task.Task(1, 1, 1, 2, alpha=1))
 MeatGrinder = Task.TaskSystem(tasks)
 
 # LongTransitive
-# Sometimes the length of the period is interesting too
 tasks = []
 tasks.append(Task.Task(0, 45, 150, 150, alpha=23))
 tasks.append(Task.Task(20, 10, 50, 50, alpha=23))
@@ -130,10 +129,18 @@ tasks.append(Task.Task(4, 1, 1, 10, alpha=1))
 tasks.append(Task.Task(6, 4, 10, 10, alpha=1))
 LongTransitive2 = Task.TaskSystem(tasks)
 tasks = []
+tasks.append(Task.Task(57, 12, 40, 40, 2))
+tasks.append(Task.Task(13, 1, 16, 16, 2))
+tasks.append(Task.Task(0, 23, 40, 40, 2))
+LongTransitive3 = Task.TaskSystem(tasks)
+
+# LongPermanent
+tasks = []
 tasks.append(Task.Task(0, 1, 5, 5, alpha=2))
 tasks.append(Task.Task(3, 5, 10, 10, alpha=2))
 tasks.append(Task.Task(0, 1, 5, 5, alpha=2))
-LongTransitive3 = Task.TaskSystem(tasks)
+LongPermanent = Task.TaskSystem(tasks)
+
 
 # FailByTransitive
 tasks = []

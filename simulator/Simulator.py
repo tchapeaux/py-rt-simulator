@@ -54,11 +54,11 @@ class Simulator(object):  # Global multiprocessing only
             self.drawer = None
 
     def checkForStableConfig(self):
-        if self.isStable:
+        # quick test for necessary conditions
+        if self.t < self.system.omax() or self.isStable:
             return
-
-        if (self.t > self.system.omax() and
-                (self.t - self.system.omax()) % self.system.hyperPeriod() == 0):
+        # only save config at each omax + x H
+        if (self.t - self.system.omax()) % self.system.hyperPeriod() == 0:
             currentConfig = SystemConfiguration(self.getCurrentJobs(), self.t)
             if self.verbose:
                 print("\tTesting for stable config.")
@@ -253,7 +253,18 @@ class Simulator(object):  # Global multiprocessing only
     def permanentPeriodLength(self):
         """ return length of the permanent period in number of hyperiod"""
         assert self.isStable is True, "Simulator.permanentPeriodLength: call run() first"
+        assert len(self.savedConfigs) > 0
         lastConfig = self.savedConfigs[-1]
         for i, previousConfig in enumerate(self.savedConfigs[:-1]):
             if lastConfig == previousConfig:
                 return len(self.savedConfigs[:-1]) - i
+
+    def transientPeriodLength(self):
+        """ return length of the transient period
+        i.e. the first x such that there exist y < x such that:
+            the system configuration at t=(omax + x H) is the same as
+            the system configuration at t=(omax + y H)
+        """
+        assert self.isStable is True, "Simulator.transientPeriodLength: call run() first"
+        assert len(self.savedConfigs) > 0
+        return len(self.savedConfigs)
