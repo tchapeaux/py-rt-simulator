@@ -50,7 +50,7 @@ scheduler = Scheduler.EDF(tau)
 simu = Simulator.Simulator(tau, stop=stop, nbrCPUs=1, scheduler=scheduler, abortAndRestart=False, verbose=True)
 
 try:
-    simu.run(stopAtDeadlineMiss=True, stopAtStableConfig=False)
+    simu.run(stopAtDeadlineMiss=True, stopAtStableConfig=True)
     if simu.success():
         print("Success.")
     else:
