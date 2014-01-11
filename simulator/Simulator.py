@@ -23,13 +23,15 @@ class Simulator(object):  # Global multiprocessing only
             if fpdit:
                 stop = fpdit + tau.hyperPeriod()
             else:
-                stop = tau.omax() + tau.hyperPeriod()
+                stop = tau.omax() + 10 * tau.hyperPeriod()
+            if verbose:
+                print("No maximal stop value specified! Default value:", stop)
         self.stop = stop + 1  # I just solved every OBOE in the world
         self.savedConfigs = []
 
-        # CPUs are accessible via either
-        # - CPUs : a list with fixed ordering
-        # - activeCPUsHeap and preemptedCPUs : where the ordering is not guaranteed
+        # CPUs are accessible via either:
+        # - CPUs (list in which the ordering is constant)
+        # - activeCPUsHeap and preemptedCPUs (heaps ordered by some priority)
         self.CPUs = [CPU() for i in range(self.m)]
         self.activeCPUsHeap = []
         heapify(self.activeCPUsHeap)
@@ -54,7 +56,8 @@ class Simulator(object):  # Global multiprocessing only
             self.drawer = None
 
     def checkForStableConfig(self):
-        # quick test for necessary conditions
+        # Filter by necessary conditions
+        # note that t = 0 is not filtered in synchronous systems (which is ok)
         if self.t < self.system.omax() or self.isStable:
             return
         # only save config at each omax + x H
