@@ -21,7 +21,6 @@ class PALLF(Scheduler.SchedulerDP):
     def earliestPreempArrival(self, job, simu):
         # return earliest time at which job will be preempted if it is chosen now
         t = simu.t
-        currentLax = self.getLaxity(job, simu)
         finishTime = self.finishTime(job, simu)
         # Find next preemptive job arrival amongst tasks
         candidate = None
@@ -30,14 +29,18 @@ class PALLF(Scheduler.SchedulerDP):
             # expected priorities (based on lax)
             jobExecLeftAtArrival = max(0, finishTime - nextArrival)
             arrivalLax = task.D - task.C
-            if arrivalLax < jobExecLeftAtArrival and nextArrival < finishTime and (candidate is None or nextArrival < candidate):
+            if (
+                nextArrival < finishTime and
+                arrivalLax < jobExecLeftAtArrival and
+                (candidate is None or nextArrival < candidate)
+            ):
                 candidate = nextArrival
         return candidate
 
     def priority(self, job, simu):
         lax = self.getLaxity(job, simu)
         if self.isJobExecuting(job, simu):
-            return 1/(self.prioOffset + lax - job.alpha())
+            return 1 / (self.prioOffset + lax - job.alpha())
         if job.alpha() > 1:
             # If executing now is sure to result in costly preemption, idle
             epa = self.earliestPreempArrival(job, simu)
