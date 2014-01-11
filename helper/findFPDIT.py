@@ -5,6 +5,7 @@ import heapq
 import array
 import copy
 
+
 def isGoodResult(res, intervals, tasks):
     for t in tasks:
         foundGoodA = False
@@ -16,11 +17,19 @@ def isGoodResult(res, intervals, tasks):
             return False
     return True
 
-class TaskCongruenceSystem(object):
-	def __init__(self,xList,pList):
-		self.xList = xList
-		self.pList = pList
 
+class TaskCongruenceSystem(object):
+    def __init__(self, xList, pList):
+        self.xList = xList
+        self.pList = pList
+
+
+# DOES NOT WORK ???
+# e.g. the system:
+# (0, 1, 17, 18, 0))
+# (6, 1, 3, 10, 0))
+# (6, 1, 8, 8, 0))
+# has a FPDIT of 54 but the function returns 270
 def findFPDIT(tau):
     # Requires to solve several system of modular equations
 
@@ -42,8 +51,8 @@ def findFPDIT(tau):
 
     for task in tau.tasks:
         pFactors = myAlgebra.primeFactors(task.T)
-        primalPowers = [pow(t,pFactors.count(t)) for t in set(pFactors)]
-        congruenceDict[task] = TaskCongruenceSystem(intervals[task],primalPowers)
+        primalPowers = [pow(t, pFactors.count(t)) for t in set(pFactors)]
+        congruenceDict[task] = TaskCongruenceSystem(intervals[task], primalPowers)
 #         newPrimalPowers = copy.copy(primalPowers)
 #         for pTuple in zip(set(pFactors),primalPowers):
 #             prime = pTuple[0]
@@ -126,7 +135,7 @@ def multiCRP(congruenceDict):
     sumChunks = {}
     for t in tgsList:
         tgsSumList = array.array('i', [0])*len(t.xList)
-        for cnt,x in enumerate(t.xList):
+        for cnt, x in enumerate(t.xList):
             tgsSum = 0
             for p in t.pList:
                 Mi = H // p
@@ -140,14 +149,10 @@ def multiCRP(congruenceDict):
     for t in tgsList:
         newResults = array.array('i', [0])*(len(t.xList)*len(results))
         index = 0
-        for cnt,x in enumerate(t.xList):
+        for cnt, x in enumerate(t.xList):
             for r in results:
                 newResults[index] = (r + sumChunks[t][cnt]) % H
                 index += 1
         results = newResults
 
     return [r % H for r in results]
-
-
-if __name__ == '__main__':
-    pass
