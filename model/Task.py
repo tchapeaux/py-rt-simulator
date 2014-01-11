@@ -20,7 +20,12 @@ class Task(object):
 
     @staticmethod
     def fromText(taskStr):
-        reRes = re.search(r"((?P<O>[0-9]+), (?P<C>[0-9]+), (?P<D>[0-9]+), (?P<T>[0-9]+), (?P<a>[0-9]+))", str(taskStr), re.DOTALL)
+        taskRegex = r"((?P<O>[0-9]+), (?P<C>[0-9]+), (?P<D>[0-9]+), (?P<T>[0-9]+), (?P<a>[0-9]+))"
+        reRes = re.search(
+            taskRegex,
+            str(taskStr),
+            re.DOTALL
+        )
         assert reRes, "Task.fromText -- Incorrect task string:\t" + taskStr
         (O, C, D, T, alpha) = tuple((int(reRes.group(c)) for c in "OCDTa"))
         return Task(O, C, D, T, alpha=alpha)
