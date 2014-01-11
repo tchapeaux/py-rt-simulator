@@ -9,7 +9,7 @@ import subprocess
 import sys
 
 # tau = Task.TaskSystem(TaskGenerator.generateTasks(0.7, 3, 33750, 5, 20, synchronous=False, constrDeadlineFactor=0))
-tau = systems.LongTransitive3
+tau = systems.test
 
 if len(sys.argv) > 1:
     with open(sys.argv[1]) as f:
@@ -24,18 +24,18 @@ print("H", H)
 print("fpdit", fpdit)
 print("U", tau.systemUtilization())
 
-stop = Omax + 10 * H
+stop = Omax + 2 * H
 # if fpdit:
 #     stop = fpdit + H
 
 print("stop", stop)
 
-scheduler = Scheduler.EDF(tau)
+# scheduler = Scheduler.EDF(tau)
 # scheduler = Scheduler.LLF(tau)
 # scheduler = Scheduler.SpotlightEDF(tau)
 # scheduler = ChooseKeepEDF.ChooseKeepEDF(tau)
 # scheduler = Scheduler.PTEDF(tau)
-# scheduler = PALLF.PALLF(tau)
+scheduler = PALLF.PALLF(tau)
 # scheduler = Scheduler.ArbitraryScheduler(tau, systems.mpanaSchedule)
 # scheduler = LBLScheduler.LBLEDF(tau)
 

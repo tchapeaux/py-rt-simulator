@@ -44,13 +44,14 @@ def oneTest(utilization):
 
 domin_scores = {}
 scores = {}
-NUMBER_OF_SYSTEMS = 10
+NUMBER_OF_SYSTEMS = 1000
 uRange = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 schedulers = [LBLScheduler.LBLEDF, Scheduler.EDF]
 names = ["PA-EDF", "EDF"]
 generate_synchronous_only = False
 
 failures = []
+victories = []
 
 executor = concurrent.futures.ProcessPoolExecutor()
 futures = set()
@@ -78,6 +79,8 @@ for f in futures:
                 domin_scores[u][sched] += 1
     if success[schedulers[1]] and not success[schedulers[0]]:
         failures.append(tau)
+    if success[schedulers[0]] and not success[schedulers[1]]:
+        victories.append(tau)
 
 print("Writing result to memory...")
 with open("mainSimuComp_results.pickle", "wb") as output:
@@ -86,3 +89,5 @@ with open("mainSimuComp_results.pickle", "wb") as output:
 
 for fail in failures:
     print("FAIL", str(fail))
+for vict in victories:
+    print("VICT", str(vict))
