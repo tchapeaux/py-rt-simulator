@@ -51,6 +51,13 @@ tasks.append(Task.Task(0, 3, 6, 6, alpha=2))
 tasks.append(Task.Task(1, 2, 4, 4, alpha=2))
 EDFNonOptimal = Task.TaskSystem(tasks)
 
+#non-optimality of EDF in implicit systems without the need for idling
+tasks = []
+tasks.append(Task.Task(0, 1, 3, 3, alpha=2))
+tasks.append(Task.Task(0, 3, 11, 11, alpha=2))
+EDFNonOptimalImplicitNoIdle = Task.TaskSystem(tasks)
+
+
 # Anomaly: removing Task (0,1,2,4) renders the system unfeasible!
 # This is also an example of necessary idle time and non-optimality of EDF/SpotlightEDF
 tasks = []
@@ -293,8 +300,7 @@ DITPaperExample = Task.TaskSystem(tasks)
 
 # test
 tasks = []
-tasks.append(Task.Task(0, 1, 3, 3, alpha=2))
-tasks.append(Task.Task(0, 4, 30, 30, alpha=2))
-tasks.append(Task.Task(0, 1, 12, 12, alpha=2))
-
+tasks.append(Task.Task(0, 1, 17, 18, 0))
+tasks.append(Task.Task(6, 1, 3, 10, 0))
+tasks.append(Task.Task(6, 1, 8, 8, 0))
 test = Task.TaskSystem(tasks)
