@@ -13,7 +13,7 @@ def oneTest(utilization):
     global generate_synchronous_only
     # print(utilization)
     Utot = utilization
-    maxHyperT = 360
+    maxHyperT = 554400
     # maxHyperT = -1
     Tmin = 3
     Tmax = 50
@@ -27,7 +27,7 @@ def oneTest(utilization):
     Omax = max([task.O for task in tau.tasks])
     H = tau.hyperPeriod()
     fpdit = algorithms.findFirstDIT(tau)
-    stop = Omax + 4 * H  # FIXME
+    stop = Omax + 10 * H  # FIXME
     if fpdit:
         stop = fpdit + H
     # print("stop", stop)
@@ -44,7 +44,7 @@ def oneTest(utilization):
 
 domin_scores = {}
 scores = {}
-NUMBER_OF_SYSTEMS = 1000
+NUMBER_OF_SYSTEMS = 10000
 uRange = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 schedulers = [Scheduler.PTEDF, Scheduler.EDF]
 names = ["PTEDF", "EDF"]
