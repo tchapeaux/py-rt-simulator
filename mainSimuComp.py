@@ -44,7 +44,7 @@ def oneTest(utilization):
 
 domin_scores = {}
 scores = {}
-NUMBER_OF_SYSTEMS = 10000
+NUMBER_OF_SYSTEMS = 100
 uRange = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 schedulers = [Scheduler.PTEDF, Scheduler.EDF]
 names = ["PTEDF", "EDF"]
@@ -53,8 +53,6 @@ generate_synchronous_only = False
 failures = []
 victories = []
 
-executor = concurrent.futures.ProcessPoolExecutor()
-futures = set()
 print("Initializing data structures...")
 for u in uRange:
     domin_scores[u] = {}
@@ -63,24 +61,30 @@ for u in uRange:
         scores[u][sched] = 0
         domin_scores[u][sched] = 0
 
-print("Launching simulations...")
-for u in uRange:
-    futures.update([executor.submit(oneTest, u) for n in range(NUMBER_OF_SYSTEMS)])
+with concurrent.futures.ProcessPoolExecutor() as executor:
+    futures = set()
+    print("Launching simulations...")
+    for u in uRange:
+        futures.update([executor.submit(oneTest, u) for n in range(NUMBER_OF_SYSTEMS)])
 
-for f in futures:
-    u, success, tau = f.result()
-    for sched in success.keys():
-            if success[sched]:
-                scores[u][sched] += 1
-            otherSuccess = False
-            for otherSched in [s for s in success.keys() if s is not sched]:
-                otherSuccess = otherSuccess or success[otherSched]
-            if success[sched] and not otherSuccess:
-                domin_scores[u][sched] += 1
-    if success[schedulers[1]] and not success[schedulers[0]]:
-        failures.append(tau)
-    if success[schedulers[0]] and not success[schedulers[1]]:
-        victories.append(tau)
+    print("Waiting for all threads to complete")
+
+    for i, f in enumerate(concurrent.futures.as_completed(futures)):
+        if i % (NUMBER_OF_SYSTEMS) == 0:  # this is 1/10th of the total count
+            print("Completed", i, "systems")
+        u, success, tau = f.result()
+        for sched in success.keys():
+                if success[sched]:
+                    scores[u][sched] += 1
+                otherSuccess = False
+                for otherSched in [s for s in success.keys() if s is not sched]:
+                    otherSuccess = otherSuccess or success[otherSched]
+                if success[sched] and not otherSuccess:
+                    domin_scores[u][sched] += 1
+        if success[schedulers[1]] and not success[schedulers[0]]:
+            failures.append(tau)
+        if success[schedulers[0]] and not success[schedulers[1]]:
+            victories.append(tau)
 
 print("Writing result to memory...")
 with open("mainSimuComp_results.pickle", "wb") as output:
