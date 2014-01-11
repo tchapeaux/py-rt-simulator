@@ -18,6 +18,13 @@ def isDefinitelyIdle(task, t):
 
 
 def YAfindFPDIT(tau):
+    """
+    Returns the value of the FPDIT if it exists.
+    Pseudo-code of the algorithm:
+    1. t <- omax + 1
+    2. while t < omax + H and t is not a DIT:
+    3.     t <- maximal deadline of the active jobs at t
+    """
     H = tau.hyperPeriod()
     omax, latestTask = max([(task.O, task) for task in tau.tasks])
     t = omax + 1  # omax is never a FPDIT (by definition)
@@ -36,6 +43,7 @@ def YAfindFPDIT(tau):
 
 
 def LIPARIfindFPDIT(tau):
+    # seems buggy...
     omax = tau.omax()
     H = tau.hyperPeriod()
     arrivals = {}
