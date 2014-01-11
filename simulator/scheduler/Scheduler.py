@@ -105,9 +105,11 @@ class PTEDF(SchedulerDP):
 
 
 class ArbitraryScheduler(SchedulerDP):
-    """Allow the user to define his own scheduling.
-    format of userSchedule : userSchedule[t] = task to execute
-    if t > len(userSchedule), userSchedule is assumed periodic"""
+    """
+    Allow the user to define his own scheduling.
+        format of userSchedule : userSchedule[t] = task to execute
+        if t > len(userSchedule), userSchedule is assumed periodic
+    """
     def __init__(self, tau, userSchedule):
         super().__init__(tau)
         self.tau = tau
@@ -119,8 +121,8 @@ class ArbitraryScheduler(SchedulerDP):
 
 
 class SpotlightEDF(SchedulerDP):
+    """ Non-optimal algorithm taking preemption cost into account."""
     def __init__(self, tau):
-        """ Non-optimal algorithm taking preemption cost into account."""
         super().__init__(tau)
         self.prioOffset = max([task.alpha for task in tau.tasks])
 
