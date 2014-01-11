@@ -11,7 +11,6 @@ if __name__ == '__main__':
         TestMyAlgebra,
         TestTask,
         TestAlgorithms,
-        TestFindFPDIT,
         TestSimulator,
         TestSimulatorWithKnownSystems
     ]
