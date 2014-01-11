@@ -46,8 +46,8 @@ domin_scores = {}
 scores = {}
 NUMBER_OF_SYSTEMS = 1000
 uRange = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
-schedulers = [LBLScheduler.LBLEDF, Scheduler.EDF]
-names = ["PA-EDF", "EDF"]
+schedulers = [Scheduler.PTEDF, Scheduler.EDF]
+names = ["PTEDF", "EDF"]
 generate_synchronous_only = False
 
 failures = []
@@ -89,5 +89,5 @@ with open("mainSimuComp_results.pickle", "wb") as output:
 
 for fail in failures:
     print("FAIL", str(fail))
-for vict in victories:
-    print("VICT", str(vict))
+# for vict in victories:
+#     print("VICT", str(vict))
