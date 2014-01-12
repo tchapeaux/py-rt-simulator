@@ -63,6 +63,7 @@ if __name__ == '__main__':
     names = ["PTEDF", "EDF"]
     generate_synchronous_only = False
     outFile = open("out.txt", "w")
+    pickFilePath = "mainSimuComp_results.pickle"
 
     helpString = \
         "Usage: python3 mainSimuComp.py <-paramName> <paramValue>\n\
@@ -80,6 +81,8 @@ if __name__ == '__main__':
         paramV = argv[i + 1]
         if argv[i] == "-o":
             outFile = open(paramV, "w")
+        elif argv[i] == "-p":
+            pickFilePath = paramV
         elif argv[i] == "-n":
             NUMBER_OF_SYSTEMS = int(paramV)
         elif argv[i] == "-synchr":
@@ -122,7 +125,7 @@ if __name__ == '__main__':
 
         for i, f in enumerate(concurrent.futures.as_completed(futures)):
             if i % (NUMBER_OF_SYSTEMS) == 0:  # this is 1/10th of the total count
-                outFile.write("Completed " + str(i) + " systems")
+                outFile.write("Completed " + str(i) + " systems" + "\n")
             u, success, tau = f.result()
             for sched in success.keys():
                     if success[sched]:
@@ -137,12 +140,13 @@ if __name__ == '__main__':
             if success[schedulers[0]] and not success[schedulers[1]]:
                 victories.append(tau)
 
-    outFile.write("Writing result to memory...")
-    with open("mainSimuComp_results.pickle", "wb") as output:
+    outFile.write("Writing result to memory..." + "\n")
+    with open(pickFilePath, "wb") as output:
         pickle.dump((domin_scores, scores, NUMBER_OF_SYSTEMS, uRange, schedulers, names, generate_synchronous_only, failures), output, pickle.HIGHEST_PROTOCOL)
-        outFile.write("Done.")
+        outFile.write("Done." + "\n")
 
     for fail in failures:
-        outFile.write("FAIL", str(fail))
+        outFile.write("FAIL", str(fail) + "\n")
     # for vict in victories:
     #     outFile.write("VICT", str(vict))
+    outFile.close()
