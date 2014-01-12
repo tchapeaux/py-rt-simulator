@@ -3,7 +3,6 @@ import pdb
 
 from model.CPU import CPU
 from model import algorithms
-from simulator.drawer import Drawer
 from simulator.Configuration import SystemConfiguration
 
 
@@ -203,9 +202,9 @@ class Simulator(object):  # Global multiprocessing only
         # if self.t == 2:
         #     pdb.set_trace()
         if self.verbose: print("t =", self.t)
+        self.cleanFinishedJobs()
         self.checkForStableConfig()
         self.scheduler.initInstant()
-        self.cleanFinishedJobs()
         self.checkDeadlineMiss()
         self.checkJobArrival()
         self.handlePreemptions()
