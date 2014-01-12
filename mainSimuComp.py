@@ -69,6 +69,7 @@ if __name__ == '__main__':
         Parameters:\n\
         -sched1 / sched2 : Name of the compared schedulers\n\
         -o : log file (default: out.txt)\n\
+        -p : pickle file (default: mainSimuComp_results.pickle)\n\
         -n : number of systems per data point (default: 1000)\n\
         -synchr : generate synchronous system only (1/0) (default: 0)\
         "
