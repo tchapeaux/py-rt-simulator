@@ -1,7 +1,7 @@
 #!/bin/bash -l
 #PBS -l nodes=8:ppn=2
 #PBS -l walltime=3:00:00
-#PBS -l mem=500mb
+#PBS -l mem=1gb
 #PBS -o stdout.txt
 #PBS -e stderr.txt
 #PBS -N mainSimuComp
