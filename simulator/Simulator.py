@@ -10,6 +10,26 @@ def heappeek(heap):
     return heap[0] if len(heap) > 0 else None
 
 
+def getLaunchedSimu(tau, sched):
+    """
+        Return an instance of Simulator having run tau with sched
+        The Simulator will be launched in non-verbose mode and without visual \
+        representation of the execution.
+    """
+    Omax = tau.omax()
+    H = tau.hyperPeriod()
+    fpdit = algorithms.findFirstDIT(tau)
+    stop = 0
+    if fpdit:
+        stop = fpdit + 2 * H
+    else:
+        stop = Omax + 10 * H  # FIXME but cleverly if possible
+
+    simulator = Simulator(tau, stop, nbrCPUs=1, scheduler=sched, abortAndRestart=False, verbose=False, drawing=False)
+    simulator.run()
+    return simulator
+
+
 class Simulator(object):  # Global multiprocessing only
     def __init__(self, tau, stop, nbrCPUs, scheduler, abortAndRestart, verbose=False, drawing=True):
         """stop can be set to None for default value"""

@@ -300,9 +300,23 @@ tasks.append(Task.Task(8, 0, 7, 15, alpha=0))
 tasks.append(Task.Task(0, 0, 2, 5, alpha=0))
 DITPaperExample = Task.TaskSystem(tasks)
 
+# PMImpRequireIdle
+# Note that EDF schedule this without idle unit (but with more preemptions)
+tasks = []
+tasks.append(Task.Task(7, 7, 9, 9, 2))
+tasks.append(Task.Task(0, 4, 21, 21, 2))
+PMImpRequireIdle = Task.TaskSystem(tasks)
+
+tasks = []
+tasks.append(Task.Task(11, 10, 45, 45, 2))
+tasks.append(Task.Task(0, 7, 14, 14, 2))
+tasks.append(Task.Task(0, 1, 7, 7, 2))
+PMImpDoubleTap = Task.TaskSystem(tasks)
+
 
 # test
 tasks = []
-tasks.append(Task.Task(0, 1, 4, 4, 2))
-tasks.append(Task.Task(0, 12, 16, 16, 2))
+tasks.append(Task.Task(7, 7, 9, 9, 2))
+tasks.append(Task.Task(0, 4, 21, 21, 2))
 test = Task.TaskSystem(tasks)
+
