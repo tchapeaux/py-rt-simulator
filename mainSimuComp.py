@@ -104,7 +104,7 @@ if __name__ == '__main__':
         elif argv[i] == "-writeVict":
             writeVict = True if int(paramV) == 1 else False
         elif argv[i] == "-writeFail":
-            writeFalse = True if int(paramV) == 1 else False
+            writeFail = True if int(paramV) == 1 else False
         elif argv[i] == "-cdf":
             CDF = int(paramV)
         elif argv[i] == "-sched1":
@@ -165,6 +165,11 @@ if __name__ == '__main__':
                     victories.append(tau)
 
     with open(outFilePath, "w") as outFile:
+        outFile.write(
+            "Report out of " + str(NUMBER_OF_SYSTEMS * len(uRange))
+            + " systems\n"
+        )
+        outFile.write("===============================\n")
         if writeVict:
             if len(victories) == 0:
                 outFile.write("No victories.\n")
