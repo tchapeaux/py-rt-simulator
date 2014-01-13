@@ -11,6 +11,7 @@ import sys
 
 def oneTest(utilization):
     global schedulers
+    global CDF
     global generate_synchronous_only
     # print(utilization)
     Utot = utilization
@@ -20,8 +21,16 @@ def oneTest(utilization):
     Tmax = 50
     n = random.randint(2, 5)
     preemptionCost = 2
-    constrDeadlineFactor = 0  # 0 is implicit, 1 is constrained
-    tasks = TaskGenerator.generateTasks(Utot, n, maxHyperT, Tmin, Tmax, preemptionCost=preemptionCost, synchronous=generate_synchronous_only, constrDeadlineFactor=constrDeadlineFactor)
+    tasks = TaskGenerator.generateTasks(
+        Utot,
+        n,
+        maxHyperT,
+        Tmin,
+        Tmax,
+        preemptionCost=preemptionCost,
+        synchronous=generate_synchronous_only,
+        constrDeadlineFactor=CDF
+    )
     tau = Task.TaskSystem(tasks)
     # print(tau)
 
@@ -55,12 +64,11 @@ def recognizeSchedulerName(name):
 
 
 if __name__ == '__main__':
-    domin_scores = {}
-    scores = {}
     NUMBER_OF_SYSTEMS = 100
     uRange = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
     schedulers = [Scheduler.PTEDF, Scheduler.EDF]
     names = ["PTEDF", "EDF"]
+    CDF = 0
     generate_synchronous_only = False
     outFilePath = "mainSimuComp_log.txt"
     pickFilePath = "mainSimuComp_results.pickle"
@@ -89,6 +97,8 @@ if __name__ == '__main__':
             NUMBER_OF_SYSTEMS = int(paramV)
         elif argv[i] == "-synchr":
             generate_synchronous_only = True if int(paramV) == 1 else False
+        elif argv[i] == "-cdf":
+            CDF = int(paramV)
         elif argv[i] == "-sched1":
             newSched = recognizeSchedulerName(paramV)
             if newSched is None:
@@ -106,10 +116,12 @@ if __name__ == '__main__':
     del argv
     del argc
 
+    print("Initializing data structures...")
+    domin_scores = {}
+    scores = {}
     failures = []
     victories = []
-
-    print("Initializing data structures...")
+    number_of_tests_left = NUMBER_OF_SYSTEMS * len(uRange)
     for u in uRange:
         domin_scores[u] = {}
         scores[u] = {}
@@ -142,11 +154,6 @@ if __name__ == '__main__':
             if success[schedulers[0]] and not success[schedulers[1]]:
                 victories.append(tau)
 
-    print("Writing result to memory...")
-    with open(pickFilePath, "wb") as output:
-        pickle.dump((domin_scores, scores, NUMBER_OF_SYSTEMS, uRange, schedulers, names, generate_synchronous_only, failures), output, pickle.HIGHEST_PROTOCOL)
-        print("Done.")
-
     with open(outFilePath, "w") as outFile:
         for vict in victories:
             outFile.write("VICT " + str(vict) + "\n")
@@ -154,3 +161,8 @@ if __name__ == '__main__':
         for fail in failures:
             outFile.write("FAIL " + str(fail) + "\n")
         outFile.close()
+
+    print("Writing result to memory...")
+    with open(pickFilePath, "wb") as output:
+        pickle.dump((domin_scores, scores, NUMBER_OF_SYSTEMS, uRange, schedulers, names, generate_synchronous_only, failures), output, pickle.HIGHEST_PROTOCOL)
+        print("Done.")
