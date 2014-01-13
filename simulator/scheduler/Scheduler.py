@@ -37,6 +37,8 @@ class LLF(SchedulerDP):
         self.tau = tau
 
     def priority(self, job, simu):
+        # Is LLF supposed to be aware of the added preemption cost?
+        # Here we suppose that yes
         slackTime = max(0, job.deadline - (simu.t + job.computationLeft()))
         return 1 / (self.prioOffset + slackTime)
 
