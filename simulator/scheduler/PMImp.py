@@ -31,6 +31,12 @@ class PMImp(Scheduler.SchedulerDP):
         waitingJobs = simu.getCurrentJobs(getBusyJobs=False)
         sortedWJ = sorted(waitingJobs, key=lambda x: x.deadline)
         cumulExecTimeLeft = 0
+        """
+            Yo future me.
+            A problem arise here if simu.t + cumulExecTimeLeft is greater than
+            a future deadline. We then have undefined behavior.
+            Solution to dominate EDF: recognize this case and do as EDF then.
+        """
         for waitingJ in sortedWJ:
             if self.getLaxity(waitingJ, simu) - cumulExecTimeLeft <= 0:
                 return PMImp.PRIO_MIN
