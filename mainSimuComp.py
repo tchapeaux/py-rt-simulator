@@ -103,7 +103,7 @@ if __name__ == '__main__':
             generate_synchronous_only = True if int(paramV) == 1 else False
         elif argv[i] == "-writeVict":
             writeVict = True if int(paramV) == 1 else False
-        elif argv[i] == "-writeFalse":
+        elif argv[i] == "-writeFail":
             writeFalse = True if int(paramV) == 1 else False
         elif argv[i] == "-cdf":
             CDF = int(paramV)
