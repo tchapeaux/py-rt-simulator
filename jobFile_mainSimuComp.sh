@@ -7,6 +7,6 @@
 #PBS -N mainSimuComp
 
 cd $WORKDIR/py-rt-simulator
-rm stderr.txt stdout.txt
+rm stderr.txt stdout.txt mainSimuComp_log.txt
 module load python/3.4.0a1
 python3 mainSimuComp.py -p $HOME/py-rt-SimuComp/results.pickle -n 100000 -sched1 PMImp -sched2 EDF
