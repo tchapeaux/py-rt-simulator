@@ -72,16 +72,20 @@ if __name__ == '__main__':
     generate_synchronous_only = False
     outFilePath = "mainSimuComp_log.txt"
     pickFilePath = "mainSimuComp_results.pickle"
+    writeVict = False
+    writeFail = False
 
     helpString = \
         "Usage: python3 mainSimuComp.py <-paramName> <paramValue>\n\
         Parameters:\n\
         -sched1 : Name of the supposed 'best' schedulers\n\
         -sched2 : Name of the supposed 'worst' schedulers\n\
+        -writeVict : Log systems scheduled by 1 but not by 2 (1/0, def: 0)\n\
+        -writeFail : Log systems scheduled by 2 but not by 1 (1/0, def: 0)\n\
         -o : log file (default: " + outFilePath + "\n\
         -p : pickle file (default: " + pickFilePath + "\n\
-        -n : number of systems per data point (default: 1000)\n\
-        -synchr : generate synchronous system only (1/0) (default: 0)\
+        -n : number of systems per data point (def: 1000)\n\
+        -synchr : generate synchronous system only (1/0 def: 0)\
         -cdf : float value of the CDF (0: implicit, 1: fully constrained) \
         "
     argv = sys.argv[1:]
@@ -97,6 +101,10 @@ if __name__ == '__main__':
             NUMBER_OF_SYSTEMS = int(paramV)
         elif argv[i] == "-synchr":
             generate_synchronous_only = True if int(paramV) == 1 else False
+        elif argv[i] == "-writeVict":
+            writeVict = True if int(paramV) == 1 else False
+        elif argv[i] == "-writeFalse":
+            writeFalse = True if int(paramV) == 1 else False
         elif argv[i] == "-cdf":
             CDF = int(paramV)
         elif argv[i] == "-sched1":
@@ -149,18 +157,25 @@ if __name__ == '__main__':
                         otherSuccess = otherSuccess or success[otherSched]
                     if success[sched] and not otherSuccess:
                         domin_scores[u][sched] += 1
-            if success[schedulers[1]] and not success[schedulers[0]]:
-                failures.append(tau)
-            if success[schedulers[0]] and not success[schedulers[1]]:
-                victories.append(tau)
+            if writeFail:
+                if success[schedulers[1]] and not success[schedulers[0]]:
+                    failures.append(tau)
+            if writeVict:
+                if success[schedulers[0]] and not success[schedulers[1]]:
+                    victories.append(tau)
 
     with open(outFilePath, "w") as outFile:
-        for vict in victories:
-            outFile.write("VICT " + str(vict) + "\n")
-        outFile.write("====================")
-        for fail in failures:
-            outFile.write("FAIL " + str(fail) + "\n")
-        outFile.close()
+        if writeVict:
+            if len(victories) == 0:
+                outFile.write("No victories.\n")
+            for vict in victories:
+                outFile.write("VICT " + str(vict) + "\n")
+            outFile.write("====================\n")
+        if writeFail:
+            if len(failures) == 0:
+                outFile.write("No failures.\n")
+            for fail in failures:
+                outFile.write("FAIL " + str(fail) + "\n")
 
     print("Writing result to memory...")
     with open(pickFilePath, "wb") as output:

@@ -12,4 +12,4 @@ rm stdout.txt
 rm mainSimuComp_log.txt
 rm mainSimuComp_results.pickle
 module load python/3.4.0a1
-python3 mainSimuComp.py -p mainSimuComp_results.pickle -n 100000 -sched1 PMImp -sched2 EDF
+python3 mainSimuComp.py -p mainSimuComp_results.pickle -n 10 -sched1 PMImp -sched2 EDF -writeFail 1
