@@ -36,11 +36,7 @@ def oneTest(utilization):
 
     Omax = max([task.O for task in tau.tasks])
     H = tau.hyperPeriod()
-    fpdit = algorithms.findFirstDIT(tau)
     stop = Omax + 10 * H  # FIXME
-    if fpdit:
-        stop = fpdit + H
-    # print("stop", stop)
     successes = {}
     for schedClass in schedulers:
         if schedClass is Scheduler.ExhaustiveFixedPriority:
@@ -60,14 +56,16 @@ def recognizeSchedulerName(name):
         return Scheduler.PTEDF
     elif name == "PMImp":
         return PMImp.PMImp
+    elif name == "LLF":
+        return Scheduler.LLF
     return None
 
 
 if __name__ == '__main__':
     NUMBER_OF_SYSTEMS = 100
     uRange = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
-    schedulers = [Scheduler.PTEDF, Scheduler.EDF]
-    names = ["PTEDF", "EDF"]
+    schedulers = [PMImp, Scheduler.EDF]
+    names = ["PMImp", "EDF"]
     CDF = 0
     generate_synchronous_only = False
     outFilePath = "mainSimuComp_log.txt"
