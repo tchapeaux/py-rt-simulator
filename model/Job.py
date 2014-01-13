@@ -14,7 +14,7 @@ class Job(object):
         return self.computation == self.task.C
 
     def computationLeft(self):
-        return self.task.C - self.computation
+        return self.task.C + self.preemptionTimeLeft - self.computation
 
     def __lt__(self, other):
         return other is not None and (self.priority, id(self.task)) < (other.priority, id(other.task))

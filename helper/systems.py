@@ -96,6 +96,7 @@ tasks.append(Task.Task(6, 4, 11, 11))
 UnfeasibleLongTransitive = Task.TaskSystem(tasks)
 
 # EDFFailTransitiveNotPeriodic
+# INCORRECT ? ??? Permanent phase has period > H !!! And failure is periodic
 tasks = []
 tasks.append(Task.Task(0, 5, 11, 11, alpha=3))
 tasks.append(Task.Task(4, 1, 1, 11))
@@ -284,12 +285,14 @@ tasks.append(Task.Task(1, 1, 9, 9, alpha=0))
 DifferentPreemptionCost_PTFNonOptimal = Task.TaskSystem(tasks)
 
 
-# ImpPTEFTNonOptimal
+# ImpPTEFTNonOptimal (+ MustPreemptAtNoArrival)
 tasks = []
-tasks.append(Task.Task(0, 9, 45, 45, alpha=2))
-tasks.append(Task.Task(0, 1, 6, 6, alpha=2))
-tasks.append(Task.Task(0, 6, 12, 12, alpha=2))
+tasks.append(Task.Task(0, 1, 4, 4, 2))
+tasks.append(Task.Task(0, 10, 16, 16, 2))
 ImpPTEFTNonOptimal = Task.TaskSystem(tasks)
+t1 = tasks[0]
+t2 = tasks[1]
+ImpPTEFTNonOptimalsched = [t1, t2, t2, t2, t2, t2, t2, t1, t1, t2, t2, t2, t2, t2, t2, t1]
 
 # DITPaperExample
 tasks = []
@@ -300,7 +303,6 @@ DITPaperExample = Task.TaskSystem(tasks)
 
 # test
 tasks = []
-tasks.append(Task.Task(0, 1, 17, 18, 0))
-tasks.append(Task.Task(6, 1, 3, 10, 0))
-tasks.append(Task.Task(6, 1, 8, 8, 0))
+tasks.append(Task.Task(0, 1, 4, 4, 2))
+tasks.append(Task.Task(0, 12, 16, 16, 2))
 test = Task.TaskSystem(tasks)

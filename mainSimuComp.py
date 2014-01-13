@@ -1,7 +1,7 @@
 from model import algorithms
 from model import Task, TaskGenerator
 from simulator import Simulator
-from simulator.scheduler import Scheduler, ChooseKeepEDF, PALLF, LBLScheduler
+from simulator.scheduler import Scheduler, LBLScheduler, PMImp
 
 import random
 import pickle
@@ -47,10 +47,10 @@ def oneTest(utilization):
 def recognizeSchedulerName(name):
     if name == "EDF":
         return Scheduler.EDF
-    elif name == "PALLF":
-        return PALLF.PALLF
     elif name == "PTEDF":
         return Scheduler.PTEDF
+    elif name == "PMImp":
+        return PMImp.PMImp
     return None
 
 
@@ -62,17 +62,19 @@ if __name__ == '__main__':
     schedulers = [Scheduler.PTEDF, Scheduler.EDF]
     names = ["PTEDF", "EDF"]
     generate_synchronous_only = False
-    outFile = open("out.txt", "w")
+    outFilePath = "mainSimuComp_log.txt"
     pickFilePath = "mainSimuComp_results.pickle"
 
     helpString = \
         "Usage: python3 mainSimuComp.py <-paramName> <paramValue>\n\
         Parameters:\n\
-        -sched1 / sched2 : Name of the compared schedulers\n\
-        -o : log file (default: out.txt)\n\
-        -p : pickle file (default: mainSimuComp_results.pickle)\n\
+        -sched1 : Name of the supposed 'best' schedulers\n\
+        -sched2 : Name of the supposed 'worst' schedulers\n\
+        -o : log file (default: " + outFilePath + "\n\
+        -p : pickle file (default: " + pickFilePath + "\n\
         -n : number of systems per data point (default: 1000)\n\
         -synchr : generate synchronous system only (1/0) (default: 0)\
+        -cdf : float value of the CDF (0: implicit, 1: fully constrained) \
         "
     argv = sys.argv[1:]
     argc = len(argv)
@@ -107,7 +109,7 @@ if __name__ == '__main__':
     failures = []
     victories = []
 
-    outFile.write("Initializing data structures..." + "\n")
+    print("Initializing data structures...")
     for u in uRange:
         domin_scores[u] = {}
         scores[u] = {}
@@ -117,15 +119,15 @@ if __name__ == '__main__':
 
     with concurrent.futures.ProcessPoolExecutor() as executor:
         futures = set()
-        outFile.write("Launching simulations..." + "\n")
+        print("Launching simulations...")
         for u in uRange:
             futures.update([executor.submit(oneTest, u) for n in range(NUMBER_OF_SYSTEMS)])
 
-        outFile.write("Waiting for all threads to complete..." + "\n")
+        print("Waiting for all threads to complete...")
 
         for i, f in enumerate(concurrent.futures.as_completed(futures)):
             if i % (NUMBER_OF_SYSTEMS) == 0:  # this is 1/10th of the total count
-                outFile.write("Completed " + str(i) + " systems" + "\n")
+                print("Completed ", str(i), "/", NUMBER_OF_SYSTEMS * 10, " systems")
             u, success, tau = f.result()
             for sched in success.keys():
                     if success[sched]:
@@ -140,13 +142,15 @@ if __name__ == '__main__':
             if success[schedulers[0]] and not success[schedulers[1]]:
                 victories.append(tau)
 
-    outFile.write("Writing result to memory..." + "\n")
+    print("Writing result to memory...")
     with open(pickFilePath, "wb") as output:
         pickle.dump((domin_scores, scores, NUMBER_OF_SYSTEMS, uRange, schedulers, names, generate_synchronous_only, failures), output, pickle.HIGHEST_PROTOCOL)
-        outFile.write("Done." + "\n")
+        print("Done.")
 
-    for fail in failures:
-        outFile.write("FAIL", str(fail) + "\n")
-    # for vict in victories:
-    #     outFile.write("VICT", str(vict))
-    outFile.close()
+    with open(outFilePath, "w") as outFile:
+        for vict in victories:
+            outFile.write("VICT " + str(vict) + "\n")
+        outFile.write("====================")
+        for fail in failures:
+            outFile.write("FAIL " + str(fail) + "\n")
+        outFile.close()

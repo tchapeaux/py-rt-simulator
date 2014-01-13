@@ -23,7 +23,7 @@ class SchedulerDP(object):
         return job in [cpu.job for cpu in simu.CPUs]
 
     def finishTime(self, job, simu):
-        return simu.t + job.computationLeft() + (job.alpha() if job.preempted else 0)
+        return simu.t + job.computationLeft()
 
     def nextArrival(self, task, t):
         """ returns the earliest job arrival of task after or at t """
@@ -65,9 +65,9 @@ class PTEDF(SchedulerDP):
         futureJobs = [j for j in futureJobs if j]  # filter
         sortedOtherJobs = sorted(simu.getCurrentJobs(getBusyJobs=False) + futureJobs, key=lambda j: j.deadline)
         sortedOtherJobs = [j for j in sortedOtherJobs if j is not job and j.deadline <= job.deadline]  # filter
-        minimalCompLeft = job.computationLeft() - (t2 - simu.t) + (job.alpha() if job.preempted else 0)
+        minimalCompLeft = job.computationLeft() - (t2 - simu.t)
         for otherJob in sortedOtherJobs:
-            laxOther = (otherJob.deadline - t2) - otherJob.computationLeft() - (otherJob.alpha() if otherJob.preempted else 0)
+            laxOther = (otherJob.deadline - t2) - otherJob.computationLeft()
             # print("\t\t\tjob", otherJob, "is waiting with laxity", laxOther, "compLeft:", minimalCompLeft)
             if laxOther < minimalCompLeft:
                 return True
@@ -76,7 +76,7 @@ class PTEDF(SchedulerDP):
         return False
 
     def default_priority(self, job, simu):
-        # lax = (job.deadline - simu.t) - job.computationLeft() - (job.alpha() if job.preempted else 0)
+        # lax = (job.deadline - simu.t) - job.computationLeft()
         return 1 / job.deadline
 
     def priority(self, job, simu):
@@ -117,7 +117,7 @@ class ArbitraryScheduler(SchedulerDP):
 
     def priority(self, job, simu):
         t = simu.t % len(self.userSchedule)
-        return 1 if job.task is self.userSchedule[t] else 0
+        return 1 if job.task == self.userSchedule[t] else -1
 
 
 class SpotlightEDF(SchedulerDP):

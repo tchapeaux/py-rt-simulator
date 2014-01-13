@@ -201,7 +201,8 @@ class Simulator(object):  # Global multiprocessing only
         self.t += 1
         # if self.t == 2:
         #     pdb.set_trace()
-        if self.verbose: print("t =", self.t)
+        if self.verbose:
+            print("t =", self.t)
         self.cleanFinishedJobs()
         self.checkForStableConfig()
         self.scheduler.initInstant()

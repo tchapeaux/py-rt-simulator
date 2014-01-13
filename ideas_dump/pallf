@@ -1,0 +1,13 @@
+pallf
+
+un algo preemption-aware doit minimiser le nombre de préemptions.
+
+on ne veut pas utiliser de limited preemption scheduling
+
+un algo preemption-aware a deux choix difficiles à faire:
+1) quand un CPU est libre et que plusieurs tâches sont en attentes, laquelle choisir ?
+2) quand un CPU est occupé avec un job et que d'autres sont en attente, quand l'interrompre ?
+
+idée: (en implicite)
+1) Choisir celui avec la plus faible laxité
+2) on garde un compteur sur la laxité de chaque job "affecté" par le courant (en gros jusqu'au prochain instant idle), lorsqu'un des compteurs atteint 0 -> on interrompt

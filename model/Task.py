@@ -46,7 +46,7 @@ class Task(object):
         return reprStr
 
     def utilization(self):
-        return (1.0*self.C)/self.T
+        return (1.0 * self.C) / self.T
 
     def completedJobCount(self, t1, t2):
         jobBeforeT2 = int(math.floor(1.0 * (t2 - self.O - self.D) / self.T))
@@ -57,8 +57,23 @@ class Task(object):
         assert (arrival - self.O) % self.T == 0
         return Job.Job(self, arrival)
 
-    def __lt__(self, other):
+    def __lt__(self, other):  # will be used to deterministically solve conflict
         return id(self) < id(other)
+
+    # def __eq__(self, other):
+    #     return id(self) == id(other)
+
+    # def __ne__(self, other):
+    #     return not self.__eq__(other)
+
+    # def __hash__(self):  # required to be used in a set
+    #     return (
+    #         hash(self.O) ^
+    #         hash(self.C) ^
+    #         hash(self.D) ^
+    #         hash(self.T) ^
+    #         hash(self.alpha)
+    #         )
 
 
 class TaskSystem(object):

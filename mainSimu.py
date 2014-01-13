@@ -2,14 +2,14 @@ from model import algorithms
 from model import TaskGenerator
 from model import Task
 from simulator import Simulator
-from simulator.scheduler import Scheduler, ChooseKeepEDF, PALLF, LBLScheduler
+from simulator.scheduler import Scheduler, LBLScheduler, PMImp
 from helper import systems
 
 import subprocess
 import sys
 
-# tau = Task.TaskSystem(TaskGenerator.generateTasks(0.7, 3, 33750, 5, 20, synchronous=False, constrDeadlineFactor=0))
-tau = systems.test
+# tau = Task.TaskSystem(TaskGenerator.generateTasks(0.7, 3, 33750, 5, 20, synchronous=True, constrDeadlineFactor=0))
+tau = systems.ImpCumulLaxity
 
 if len(sys.argv) > 1:
     with open(sys.argv[1]) as f:
@@ -25,18 +25,19 @@ print("fpdit", fpdit)
 print("U", tau.systemUtilization())
 
 stop = Omax + 2 * H
-# if fpdit:
-#     stop = fpdit + H
+if fpdit:
+    stop = fpdit + H
 
 print("stop", stop)
 
 # scheduler = Scheduler.EDF(tau)
 # scheduler = Scheduler.LLF(tau)
 # scheduler = Scheduler.SpotlightEDF(tau)
-# scheduler = ChooseKeepEDF.ChooseKeepEDF(tau)
+# scheduler = OldAndForgotten.ChooseKeepEDF(tau)
 # scheduler = Scheduler.PTEDF(tau)
-scheduler = PALLF.PALLF(tau)
-# scheduler = Scheduler.ArbitraryScheduler(tau, systems.mpanaSchedule)
+# scheduler = OldAndForgotten.PALLF(tau)
+scheduler = PMImp.PMImp(tau)
+# scheduler = Scheduler.ArbitraryScheduler(tau, systems.ImpPTEFTNonOptimalsched)
 # scheduler = LBLScheduler.LBLEDF(tau)
 
 # scheduler = Scheduler.FixedPriority(tau, [1, 2, 3])
@@ -62,4 +63,4 @@ finally:
     if "linux" in sys.platform:
         subprocess.Popen(['eog', simu.drawer.outputName()])
     elif "win" in sys.platform:
-        subprocess.Popen(['rundll32', '"C:\Program Files\Windows Photo Viewer\PhotoViewer.dll"', '"C:\\00012.tif"'])
+        subprocess.Popen(['rundll32', '"C:\Program Files\Windows Photo Viewer\PhotoViewer.dll"', simu.drawer.outputName()])
