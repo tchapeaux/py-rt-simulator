@@ -65,10 +65,10 @@ def periodicBehavior(tau):
         )
 
 if __name__ == '__main__':
-    NUMBER_OF_SYSTEMS = 10
+    NUMBER_OF_SYSTEMS = 100
     tauArray = generateSystemArray(NUMBER_OF_SYSTEMS, 0, 3)
     # tauArray.append(systems.LongTransitive) # used to be sure the functions work
-    with concurrent.futures.ThreadPoolExecutor(max_workers=8) as executor:
+    with concurrent.futures.ProcessPoolExecutor() as executor:
         for result in executor.map(periodicBehavior, tauArray):
             if result:
                 tau, stop, permLength, transLength = result
