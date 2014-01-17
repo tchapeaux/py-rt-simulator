@@ -55,7 +55,7 @@ def periodicBehavior(tau):
         simu.t > omax + 2 * H and
         simu.t < stop and
         simu.permanentPeriodLength() > 1 and
-        simu.transientPeriodLength() > 1
+        simu.transientPeriodLength() > 2
     ):
         return (
             tau,

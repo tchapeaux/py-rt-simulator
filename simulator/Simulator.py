@@ -289,5 +289,5 @@ class Simulator(object):  # Global multiprocessing only
             the system configuration at t=(omax + y H)
         """
         assert self.isStable is True, "Simulator.transientPeriodLength: call run() first"
-        assert len(self.savedConfigs) > 0
-        return len(self.savedConfigs)
+        assert len(self.savedConfigs) > 1
+        return len(self.savedConfigs) - 1
