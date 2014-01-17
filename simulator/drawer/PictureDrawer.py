@@ -11,7 +11,7 @@ class PictureDrawer(Drawer):
         self.instantWidth = 20
         self.widthMargin = 20
         self.taskHeight = 40
-        self.heightMargin = 20
+        self.heightMargin = 30
         self.width = stop * self.instantWidth + 2 * self.widthMargin
         self.height = len(simu.system.tasks) * self.taskHeight + 2 * self.heightMargin
 
@@ -99,17 +99,24 @@ class PictureDrawer(Drawer):
             self.drawLine(x, self.heightMargin, x, y, width=1, color=self.gray())
             # timeline markers
             if i % 5 == 0:
-                self.drawText(x, y + 2, str(i), color=self.black())
+                self.drawLine(x, y, x, y + 10, width=1, color=self.black())
+                self.drawText(x + 3, y + 3, str(i), color=self.black())
         # special timeline markers - Omax + k H
         H = self.simu.system.hyperPeriod()
         y = self.height - self.heightMargin
-        specialDict = {'omax': self.simu.system.omax(), 'fpdit': algorithms.findFirstDIT(self.simu.system)}
-        for specialName, specialTime in list(specialDict.items()):
+        specialDict = {
+            'Omax': self.simu.system.omax(),
+            'fpdit': algorithms.findFirstDIT(self.simu.system)
+        }
+        for specialName, specialTime in specialDict.items():
             i = 0
             while specialTime and specialTime + i * H < stop:
                 x = self.widthMargin + (specialTime + i * H) * self.instantWidth
-                self.drawLine(x, self.heightMargin, x, y, width=1, color=self.black())
-                self.drawText(x, y + 10, specialName + " + " + str(i) + " H", color=self.black())
+                self.drawLine(x, y, x, y + 23, width=1, color=self.black())
+                textString = specialName
+                if i > 0:
+                    textString += " + " + str(i) + " H"
+                self.drawText(x + 3, y + 15, textString, color=self.black())
                 i += 1
 
     def drawDeadlineMiss(self, t, task):
