@@ -8,8 +8,16 @@ from helper import systems
 import subprocess
 import sys
 
-# tau = Task.TaskSystem(TaskGenerator.generateTasks(0.7, 3, 33750, 5, 20, synchronous=True, constrDeadlineFactor=0))
-tau = systems.ImpCumulLaxity
+# tau = Task.TaskSystem(TaskGenerator.generateTasks(
+#     Utot=0.7,
+#     n=20,
+#     maxHyperT=33750,
+#     Tmin=10,
+#     Tmax=50,
+#     synchronous=True,
+#     constrDeadlineFactor=0)
+# )
+tau = systems.PMImpDoubleTap
 
 if len(sys.argv) > 1:
     with open(sys.argv[1]) as f:
@@ -37,7 +45,7 @@ print("stop", stop)
 # scheduler = Scheduler.PTEDF(tau)
 # scheduler = OldAndForgotten.PALLF(tau)
 scheduler = PMImp.PMImp(tau)
-# scheduler = Scheduler.ArbitraryScheduler(tau, systems.ImpPTEFTNonOptimalsched)
+# scheduler = Scheduler.ArbitraryScheduler(tau, systems.mpanaSchedule)
 # scheduler = LBLScheduler.LBLEDF(tau)
 
 # scheduler = Scheduler.FixedPriority(tau, [1, 2, 3])

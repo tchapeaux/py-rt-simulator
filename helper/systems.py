@@ -256,13 +256,7 @@ tasks.append(t1)
 tasks.append(t2)
 tasks.append(t3)
 MustPreemptAtNoArrival = Task.TaskSystem(tasks)
-mpanaSchedule = []
-mpanaSchedule.append(t1)
-mpanaSchedule.append(t1)
-mpanaSchedule.append(t3)
-mpanaSchedule.append(t2)
-mpanaSchedule.append(t1)
-mpanaSchedule.append(t1)
+mpanaSchedule = [t1, t1, t3, t2, t1, t1]
 
 # ImpCumulLaxity
 tasks = []
@@ -300,23 +294,31 @@ tasks.append(Task.Task(8, 0, 7, 15, alpha=0))
 tasks.append(Task.Task(0, 0, 2, 5, alpha=0))
 DITPaperExample = Task.TaskSystem(tasks)
 
+# ImpRequireIdle
+tasks = []
+tasks.append(Task.Task(0, 10, 12, 12, 2))
+tasks.append(Task.Task(1, 1, 6, 6, 2))
+ImpRequireIdle = Task.TaskSystem(tasks)
+
 # PMImpRequireIdle
+# PMImp should idle at t=69
 # Note that EDF schedule this without idle unit (but with more preemptions)
 tasks = []
 tasks.append(Task.Task(7, 7, 9, 9, 2))
 tasks.append(Task.Task(0, 4, 21, 21, 2))
 PMImpRequireIdle = Task.TaskSystem(tasks)
 
+
 tasks = []
-tasks.append(Task.Task(11, 10, 45, 45, 2))
-tasks.append(Task.Task(0, 7, 14, 14, 2))
-tasks.append(Task.Task(0, 1, 7, 7, 2))
+tasks.append(Task.Task(0, 10, 45, 45, 2))
+tasks.append(Task.Task(3, 7, 14, 14, 2))
+tasks.append(Task.Task(3, 1, 7, 7, 2))
 PMImpDoubleTap = Task.TaskSystem(tasks)
 
 
 # test
 tasks = []
-tasks.append(Task.Task(7, 7, 9, 9, 2))
-tasks.append(Task.Task(0, 4, 21, 21, 2))
+tasks.append(Task.Task(0, 10, 12, 12, 2))
+tasks.append(Task.Task(1, 1, 6, 6, 2))
 test = Task.TaskSystem(tasks)
 

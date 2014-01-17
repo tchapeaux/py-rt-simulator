@@ -58,20 +58,22 @@ def recognizeSchedulerName(name):
         return PMImp.PMImp
     elif name == "LLF":
         return Scheduler.LLF
+    elif name == "Meumeu":
+        return Scheduler.ExhaustiveFixedPriority
     return None
 
 
 if __name__ == '__main__':
-    NUMBER_OF_SYSTEMS = 100
+    NUMBER_OF_SYSTEMS = 10
     uRange = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
-    schedulers = [PMImp, Scheduler.EDF]
-    names = ["PMImp", "EDF"]
+    schedulers = [PMImp.PMImp, Scheduler.ExhaustiveFixedPriority]
+    names = ["PMImp", "Meumeu"]
     CDF = 0
     generate_synchronous_only = False
     outFilePath = "mainSimuComp_log.txt"
     pickFilePath = "mainSimuComp_results.pickle"
     writeVict = False
-    writeFail = False
+    writeFail = True
 
     helpString = \
         "Usage: python3 mainSimuComp.py <-paramName> <paramValue>\n\
@@ -127,7 +129,6 @@ if __name__ == '__main__':
     scores = {}
     failures = []
     victories = []
-    number_of_tests_left = NUMBER_OF_SYSTEMS * len(uRange)
     for u in uRange:
         domin_scores[u] = {}
         scores[u] = {}
