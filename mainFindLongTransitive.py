@@ -15,20 +15,20 @@ from helper import systems
 
 def generateSystemArray(numberOfSystems, constrDeadlineFactor, tasksCnt, verbose=False):
     systemArray = []
-    Umin = 0.25
+    Umin = 0.75
     Umax = 1
     n = tasksCnt
     Tmin = 5
-    Tmax = 100
+    Tmax = 50
     maxHyperT = 554400  # PPCM(2, 3, 5, 6, 8, 9, 10, 12, 14, 15, 16, 18, 20, 22, 24, 25, 28, 30, 32)
     # maxHyperT = -1
     for i in range(numberOfSystems):
         Utot = 1.0*random.randint(int(Umin*100), int(Umax*100))/100
         tasks = TaskGenerator.generateTasks(Utot, n, maxHyperT, Tmin, Tmax, preemptionCost=2, synchronous=False, constrDeadlineFactor=constrDeadlineFactor)
         if (verbose and numberOfSystems <= 10):
-            print(("Generated task system # ", i))
+            print("Generated task system # ", i)
             for task in tasks:
-                    print(("\t", task))
+                    print("\t", task)
         systemArray.append(Task.TaskSystem(tasks))
     return systemArray
 
@@ -65,7 +65,7 @@ def periodicBehavior(tau):
         )
 
 if __name__ == '__main__':
-    NUMBER_OF_SYSTEMS = 100
+    NUMBER_OF_SYSTEMS = 10
     tauArray = generateSystemArray(NUMBER_OF_SYSTEMS, 0, 3)
     # tauArray.append(systems.LongTransitive) # used to be sure the functions work
     with concurrent.futures.ThreadPoolExecutor(max_workers=8) as executor:
