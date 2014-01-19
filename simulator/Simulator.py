@@ -10,11 +10,9 @@ def heappeek(heap):
     return heap[0] if len(heap) > 0 else None
 
 
-def getLaunchedSimu(tau, sched):
+def getLaunchedSimu(tau, sched, nbrCPUs=1, verbose=False, drawing=False):
     """
         Return an instance of Simulator having run tau with sched
-        The Simulator will be launched in non-verbose mode and without visual \
-        representation of the execution.
     """
     Omax = tau.omax()
     H = tau.hyperPeriod()
@@ -25,7 +23,10 @@ def getLaunchedSimu(tau, sched):
     else:
         stop = Omax + 10 * H  # FIXME but cleverly if possible
 
-    simulator = Simulator(tau, stop, nbrCPUs=1, scheduler=sched, abortAndRestart=False, verbose=False, drawing=False)
+    simulator = Simulator(
+        tau, stop, nbrCPUs=nbrCPUs, scheduler=sched, abortAndRestart=False,
+        verbose=verbose, drawing=drawing
+    )
     simulator.run()
     return simulator
 

@@ -2,6 +2,7 @@ from model import algorithms
 from model import Task, TaskGenerator
 from simulator import Simulator
 from simulator.scheduler import Scheduler, LBLScheduler, PMImp
+from simulator.scheduler.recognizeSchedulerName import recognizeSchedulerName
 
 import random
 import pickle
@@ -47,21 +48,6 @@ def oneTest(utilization):
         simu.run(stopAtDeadlineMiss=True, stopAtStableConfig=True)
         successes[schedClass] = simu.success()
     return utilization, successes, tau
-
-
-def recognizeSchedulerName(name):
-    if name == "EDF":
-        return Scheduler.EDF
-    elif name == "PTEDF":
-        return Scheduler.PTEDF
-    elif name == "PMImp":
-        return PMImp.PMImp
-    elif name == "LLF":
-        return Scheduler.LLF
-    elif name == "Meumeu":
-        return Scheduler.ExhaustiveFixedPriority
-    return None
-
 
 if __name__ == '__main__':
     NUMBER_OF_SYSTEMS = 10
