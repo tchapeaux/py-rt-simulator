@@ -131,7 +131,7 @@ class TestScheduler(unittest.TestCase):
         self.checkResult(tau, Scheduler.ExhaustiveFixedPriority(tau, nbrCPUs=1, abortAndRestart=False), False)
 
     def test_PMImp(self):  # yes this test a scheduler not a system...
-        tau = systems.PMImpHard
+        tau = systems.PMImpRequireIdle
         self.checkResult(tau, PMImp.PMImp(tau), True)
         tau = systems.PMImpDoubleTap
         self.checkResult(tau, PMImp.PMImp(tau), True)
