@@ -63,6 +63,7 @@ class Simulator(object):  # Global multiprocessing only
         self.t = -1
         self.deadlineMisses = []
         self.isStable = False  # stable = periodic phase attained
+        self.idleInstantCounter = 0
         self.activeJobsHeap = []
         heapify(self.activeJobsHeap)
 
@@ -73,6 +74,11 @@ class Simulator(object):  # Global multiprocessing only
             # self.drawer = PILDrawer.PILDrawer(self, stop)
         else:
             self.drawer = None
+
+    def checkForIdleInstant(self):
+        # must be called after self.cleanFinishedJob
+        if len(self.getCurrentJobs()) == 0:
+            self.idleInstantCounter += 1
 
     def checkForStableConfig(self):
         # Filter by necessary conditions
@@ -224,6 +230,7 @@ class Simulator(object):  # Global multiprocessing only
         if self.verbose:
             print("t =", self.t)
         self.cleanFinishedJobs()
+        self.checkForIdleInstant()
         self.checkForStableConfig()
         self.scheduler.initInstant()
         self.checkDeadlineMiss()
@@ -238,6 +245,7 @@ class Simulator(object):  # Global multiprocessing only
                     print("\t(preempt)", cpu.job.preemptionTimeLeft, "left")
 
     def run(self, stopAtDeadlineMiss=True, stopAtStableConfig=True):
+        assert self.t == -1, "Simulator.run: This Simulator has already been run"
         try:
             while(self.t < self.stop):
                 self.incrementTime()
