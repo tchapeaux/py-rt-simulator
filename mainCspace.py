@@ -34,6 +34,10 @@ print("")
 resultCSPACE = cs.testCVector(cspace_noredun, [task.C for task in tau.tasks])
 resultCSPACENOREDUN = cs.testCVector(cspace, [task.C for task in tau.tasks])
 resultDBF = algorithms.dbfTest(tau)
+sizeCSPACE = cspace.size()
+sizeCSPACENOREDUN = cspace_noredun.size()
 assert resultCSPACE == resultCSPACENOREDUN == resultDBF, str(resultCSPACE) + str(resultCSPACENOREDUN) + str(resultDBF)
+assert sizeCSPACE == sizeCSPACENOREDUN
+
 print("synchronous instant", algorithms.findSynchronousInstant(tau))
 print("The volume of the C-space is", cspace_noredun.size(tau))

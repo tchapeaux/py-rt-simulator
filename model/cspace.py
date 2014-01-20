@@ -50,35 +50,6 @@ class Cspace(object):
     def __len__(self):
         return self.constraints.__len__()
 
-# def Cspace(tau, upperLimit="def", lowerLimit = 0):
-#   # return a system of inequations of the form
-#   # cst_1 * C_1 + cst_2 * C_2 + ... + cst_n * C_n <= CST
-#   # encoded as a list
-#   # [cst_1, cst_2, ..., cst_n, CST]
-#
-#   Omax = max([task.O for task in tau.tasks])
-#   isSynchronous = (Omax == 0)
-#
-#   if upperLimit == "def":
-#       firstDIT = algorithms.findFirstDIT(tau)
-#       if isSynchronous:
-#           upperLimit = firstDIT
-#           lowerLimit = 0
-#       else:
-#           if firstDIT is not None:
-#               upperLimit = firstDIT + tau.hyperPeriod()
-#               lowerLimit = firstDIT
-#           else:
-#               upperLimit = Omax + 2 * tau.hyperPeriod()
-#               lowerLimit = Omax
-#
-#   # for each arrival and each deadline, create an equation
-#   constraints = []
-#   for a, d in tau.dbf_intervals(lowerLimit, upperLimit):
-#       constraints.append([algorithms.completedJobCount(t, a, d) for t in tau.tasks] + [d - a])
-#
-#   return constraints
-
     def removeRedundancy(self, firstPass=True, verbose=False):
         # Idea:
         # start with an empty list of cstr,
@@ -90,7 +61,8 @@ class Cspace(object):
         if firstPass:
             for i, cstr in enumerate(self):
                 if not cstr.isRedundant(newCspace):
-                    if verbose: print("\tNon-redundant at step ", i, ":", cstr)
+                    if verbose:
+                        print("\tNon-redundant at step ", i, ":", cstr)
                     newCspace.append(cstr)
         else:
             newCspace.extend(self)
@@ -104,7 +76,7 @@ class Cspace(object):
                 newCspace.insert(i, cstr)
                 i += 1
             elif verbose:
-                print("\t", cstr, "was redundant against", newCspace)
+                print("\t", cstr, "was redundant against:", [[c.a, c.d] for c in newCspace])
         return Cspace(newCspace, fromList=True)
 
     def numTasks(self):
@@ -160,13 +132,13 @@ class CSpaceConstraint(object):
         self.t = d - a
 
     def __repr__(self):
-        reprStr = "\t+\t".join([str(a) + "\tx" + str(i+1) for i, a in enumerate(self.coeffs)])
+        reprStr = "\t+\t".join([str(c) + "\tx" + str(i+1) for i, c in enumerate(self.coeffs)])
         reprStr += "\t<=\t" + str(self.t)
         reprStr += "\t[" + str(self.a) + ", " + str(self.d) + "]"
         return reprStr
 
     def isRedundant(self, cspace):
-        # cspace descibes constraints A X <= B
+        # cspace described by constraints A X <= B
         # cstr is another C X <= d
         # We want to know if cstr is redundant w.r.t. cspace
         # Linear problem (solved by GLPK)
@@ -174,7 +146,7 @@ class CSpaceConstraint(object):
         # s.t.
         #   AX <= b
         #   C X <= d + 1
-        # If the optimal value of the LP is > d, the
+        # If the optimal value of the LP is > d, cstr is not redundant
         if len(cspace) == 0:
             return False
         self.writeRedundancyGLPSOLData(cspace, "redundant_temp.dat")

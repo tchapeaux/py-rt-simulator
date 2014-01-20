@@ -5,12 +5,14 @@ from test.TestScheduler import TestScheduler
 from test.testMyAlgebra import TestMyAlgebra
 from test.testAlgorithms import TestAlgorithms
 from test.testTask import TestTask
+from test.testCspace import TestCspace
 
 if __name__ == '__main__':
     tests = [
         TestMyAlgebra,
         TestTask,
         TestAlgorithms,
+        TestCspace,
         TestSimulator,
         TestScheduler
     ]

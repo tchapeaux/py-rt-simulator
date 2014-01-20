@@ -1,0 +1,4 @@
+# Task format: (O, C, D, T, alpha)
+# Do not forget the space after each comas!
+(0, 1, 6, 8, 0)
+(0, 1, 12, 13, 0)
