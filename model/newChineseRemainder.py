@@ -168,17 +168,6 @@ def newFindFirstPeriodicDIT(tau):
 
     return tIdle
 
-import cProfile
-import pstats
-
-
-# def benchmark_main():
-#     systems = [Task.TaskSystem(TaskGenerator.generateTasks(1, 3, 554400, 2, 7, False)) for i in range(10000)]
-#     newL = newCRLoop(systems)
-#     oldL = oldCRLoop(systems)
-#     for n, o in zip(newL, oldL):
-#         assert(n == o)
-
 
 def newCRLoop(systems):
     l = list()
@@ -187,26 +176,8 @@ def newCRLoop(systems):
     return l
 
 
-def oldCRLoop(systems):
-    l = list()
-    for s in systems:
-        l.append(algorithms.findFirstPeriodicDIT(s))
-    return l
-
-
-# def benchmarkNewChineseRemainder():
-# #   systems = [Task.TaskSystem(TaskGenerator.generateTasks(1, 3, 554400, 2, 7, False)) for i in range(1000)]
-#
-#     cProfile.run('benchmark_main()', 'CRstats')
-#     p = pstats.Stats('CRstats')
-#     p.strip_dirs()
-#     p.sort_stats('cumulative')
-#     p.print_stats()
-#     p.print_callees('newFindFirstPeriodicDIT()')
-#     p.print_callees('newCongruencePrimalPower()')
-
-
-if __name__ == '__main__':
-#   print (array.array('i', [0])*10)
-#     benchmarkNewChineseRemainder()
-	pass
+# def oldCRLoop(systems):
+#     l = list()
+#     for s in systems:
+#         l.append(algorithms.findFirstPeriodicDIT(s))
+#     return l
