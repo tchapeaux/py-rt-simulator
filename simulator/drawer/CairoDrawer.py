@@ -23,6 +23,9 @@ class CairoDrawer(PictureDrawer):
     def white(self):
         return (1, 1, 1)
 
+    def preferredTaskColor(self):
+        return (218 / 255, 165 / 255, 32 / 255)
+
     def gray(self):
         return (0.6, 0.6, 0.6)
 

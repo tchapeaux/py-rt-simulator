@@ -42,6 +42,9 @@ class PILDrawer(PictureDrawer):
     def white(self):
         return "white"
 
+    def preferredTaskColor(self):
+        return "rgb(218, 165, 32)"
+
     def gray(self):
         return "gray"
 

@@ -7,7 +7,9 @@ class PictureDrawer(Drawer):
     """Abstract Drawer which display a single picture of the execution when it stops"""
     def __init__(self, simu, stop):
         super().__init__(simu, stop)
-        self.colors = [self.randomColor() for j in range(self.simu.m)]
+        self.colors = [self.preferredTaskColor()]
+        if self.simu.m > 1:
+            self.colors += [self.randomColor() for j in range(self.simu.m - 1)]
         self.instantWidth = 20
         self.widthMargin = 20
         self.taskHeight = 40
@@ -35,6 +37,10 @@ class PictureDrawer(Drawer):
 
     def white(self):
         """return a representation of the color black that can be used by methods"""
+        raise NotImplementedError("PictureDrawer: attempted to call abstract method")
+
+    def preferredTaskColor(self):
+        """return the preferred color for tasks in a format usable by methods"""
         raise NotImplementedError("PictureDrawer: attempted to call abstract method")
 
     def gray(self):
