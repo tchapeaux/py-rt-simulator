@@ -87,7 +87,7 @@ class TaskSystem(object):
         tasks = []
         for taskStr in systemLines:
             taskStr = taskStr.strip()
-            if len(taskStr) > 0 and taskStr[0] is not '#':
+            if len(taskStr) > 2 and '#' not in taskStr:
                 tasks.append(Task.fromText(taskStr))
         return TaskSystem(tasks)
 
