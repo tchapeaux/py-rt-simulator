@@ -10,18 +10,18 @@ def heappeek(heap):
     return heap[0] if len(heap) > 0 else None
 
 
-def getLaunchedSimu(tau, sched, nbrCPUs=1, verbose=False, drawing=False):
+def getLaunchedSimu(tau, sched, nbrCPUs=1, stop=None, verbose=False, drawing=False):
     """
         Return an instance of Simulator having run tau with sched
     """
     Omax = tau.omax()
     H = tau.hyperPeriod()
     fpdit = algorithms.findFirstDIT(tau)
-    stop = 0
-    if fpdit:
-        stop = fpdit + 2 * H
-    else:
-        stop = Omax + 10 * H  # FIXME but cleverly if possible
+    if stop is None:
+        if fpdit:
+            stop = fpdit + 2 * H
+        else:
+            stop = Omax + 10 * H  # FIXME but cleverly if possible
 
     simulator = Simulator(
         tau, stop, nbrCPUs=nbrCPUs, scheduler=sched, abortAndRestart=False,
@@ -252,7 +252,7 @@ class Simulator(object):  # Global multiprocessing only
                 self.incrementTime()
                 # if self.t % 100 == 0:
                 #     print("t", self.t, "/", self.stop)
-                if self.drawer:
+                if self.drawer and self.t < self.stop:
                     self.drawer.drawInstant(self.t)
 
                 if len(self.deadlineMisses) > 0:
