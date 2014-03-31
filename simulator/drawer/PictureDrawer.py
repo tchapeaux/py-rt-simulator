@@ -5,16 +5,17 @@ from model import algorithms
 
 class PictureDrawer(Drawer):
     """Abstract Drawer which display a single picture of the execution when it stops"""
-    def __init__(self, simu, stop):
+    def __init__(self, simu, stop, showLabels=False):
         super().__init__(simu, stop)
         self.colors = [self.preferredTaskColor()]
+        self.showLabels = showLabels
         if self.simu.m > 1:
             self.colors += [self.randomColor() for j in range(self.simu.m - 1)]
         self.instantWidth = 20
         self.widthMargin = 20
         self.taskHeight = 40
         self.heightMargin = 30
-        self.width = stop * self.instantWidth + 2 * self.widthMargin
+        self.width = (stop + 1) * self.instantWidth + 2 * self.widthMargin
         self.height = len(simu.system.tasks) * self.taskHeight + 2 * self.heightMargin
 
         self.custom_init()
@@ -88,18 +89,18 @@ class PictureDrawer(Drawer):
         return taskNbr
 
     def drawGrid(self, stop):
-        self.drawLine(self.widthMargin, self.height - self.heightMargin, self.widthMargin + self.instantWidth * stop, self.height - self.heightMargin, width=1, color=self.black())
+        self.drawLine(self.widthMargin, self.height - self.heightMargin, self.widthMargin + self.instantWidth * (stop + 1), self.height - self.heightMargin, width=1, color=self.black())
         # - horizontal lines to separate tasks
         for i, task in enumerate(self.simu.system.tasks):
             self.drawLine(
                 self.widthMargin,
                 self.height - self.heightMargin - (i + 1) * self.taskHeight,
-                self.widthMargin + self.instantWidth * stop,
+                self.widthMargin + self.instantWidth * (stop + 1),
                 self.height - self.heightMargin - (i + 1) * self.taskHeight,
                 width=1,
                 color=self.black())
         # - vertical lines to separate instants
-        for i in range(stop):
+        for i in range(stop + 1):
             x = self.widthMargin + i * self.instantWidth
             y = self.height - self.heightMargin
             self.drawLine(x, self.heightMargin, x, y, width=1, color=self.gray())
@@ -110,20 +111,21 @@ class PictureDrawer(Drawer):
         # special timeline markers - Omax + k H
         H = self.simu.system.hyperPeriod()
         y = self.height - self.heightMargin
-        specialDict = {
-            'Omax': self.simu.system.omax(),
-            'fpdit': algorithms.findFirstDIT(self.simu.system)
-        }
-        for specialName, specialTime in specialDict.items():
-            i = 0
-            while specialTime and specialTime + i * H < stop:
-                x = self.widthMargin + (specialTime + i * H) * self.instantWidth
-                self.drawLine(x, y, x, y + 23, width=1, color=self.black())
-                textString = specialName
-                if i > 0:
-                    textString += " + " + str(i) + " H"
-                self.drawText(x + 3, y + 15, textString, color=self.black())
-                i += 1
+        if self.showLabels:
+            specialDict = {
+                'Omax': self.simu.system.omax(),
+                'fpdit': algorithms.findFirstDIT(self.simu.system)
+            }
+            for specialName, specialTime in specialDict.items():
+                i = 0
+                while specialTime and specialTime + i * H < stop:
+                    x = self.widthMargin + (specialTime + i * H) * self.instantWidth
+                    self.drawLine(x, y, x, y + 23, width=1, color=self.black())
+                    textString = specialName
+                    if i > 0:
+                        textString += " + " + str(i) + " H"
+                    self.drawText(x + 3, y + 15, textString, color=self.black())
+                    i += 1
 
     def drawDeadlineMiss(self, t, task):
         taskNbr = self.getTaskNbr(task)
