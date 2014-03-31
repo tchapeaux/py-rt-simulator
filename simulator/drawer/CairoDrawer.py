@@ -11,7 +11,7 @@ class CairoDrawer(PictureDrawer):
         super().__init__(simu, stop)
 
     def custom_init(self):
-        self.surface = cairo.SVGSurface("out.svg", self.width, self.height)
+        self.surface = cairo.PSSurface("out.eps", self.width, self.height)
         self.ctx = cairo.Context(self.surface)
 
     def randomColor(self):
@@ -80,4 +80,4 @@ class CairoDrawer(PictureDrawer):
         self.surface.finish()
 
     def outputName(self):
-        return "out.svg"
+        return "out.eps"
