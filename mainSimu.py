@@ -10,8 +10,9 @@ import subprocess
 import sys
 
 # default parameters
-tau = systems.PMImpRequireIdle
-schedName = "PMImp"
+tau = systems.ImpRequireIdle
+schedName = "PTEDF"
+stop = 13  # None for default value
 
 # Read user parameters
 helpString = \
@@ -58,8 +59,10 @@ if schedClass == Scheduler.ExhaustiveFixedPriority:
 else:
     scheduler = schedClass(tau)
 
+# scheduler = Scheduler.ArbitraryScheduler(tau, systems.ImpPTEFTNonOptimalsched)
+
 try:
-    simu = Simulator.getLaunchedSimu(tau, scheduler, verbose=True, drawing=True)
+    simu = Simulator.getLaunchedSimu(tau, scheduler, stop=stop, verbose=True, drawing=True)
     if simu.success():
         print("Success.")
     else:
@@ -68,7 +71,11 @@ except AssertionError:
     print("Something went wrong ! Close the image preview to see the stack trace")
     raise
 finally:
+    outputName = simu.drawer.outputName()
     if "linux" in sys.platform:
-        subprocess.Popen(['eog', simu.drawer.outputName()])
+        if ".eps" in outputName:
+            subprocess.Popen(['okular', simu.drawer.outputName()])
+        else:
+            subprocess.Popen(['eog', simu.drawer.outputName()])
     elif "win" in sys.platform:
         subprocess.Popen(['rundll32', '"C:\Program Files\Windows Photo Viewer\PhotoViewer.dll"', simu.drawer.outputName()])
