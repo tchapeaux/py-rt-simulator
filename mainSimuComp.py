@@ -20,7 +20,7 @@ def oneTest(utilization):
     # maxHyperT = -1
     Tmin = 3
     Tmax = 50
-    n = random.randint(2, 5)
+    n = random.randint(2, 10)
     preemptionCost = 2
     tasks = TaskGenerator.generateTasks(
         Utot,
