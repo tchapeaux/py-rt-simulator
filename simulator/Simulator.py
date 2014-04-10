@@ -82,7 +82,7 @@ class Simulator(object):  # Global multiprocessing only
             self.idleInstantCounter += 1
 
     def checkForStableConfig(self):
-        # Filter by necessary conditions
+        # Check trivial necessary condition
         # note that t = 0 is not filtered in synchronous systems (which is ok)
         if self.t < self.system.omax() or self.isStable:
             return
@@ -132,7 +132,7 @@ class Simulator(object):  # Global multiprocessing only
                 print("\t\tpriority of ", job, "is now", job.priority)
 
     def updateHeaps(self):
-        # possible bottleneck
+        # possible bottleneck?
         newJobHeap = []
         for prio, job in self.activeJobsHeap:
             newJobHeap.append((-1 * job.priority, job))
@@ -147,9 +147,12 @@ class Simulator(object):  # Global multiprocessing only
         return heappeek(self.activeCPUsHeap)
 
     def cleanFinishedJobs(self):
-        self.activateCPUs()
         for cpu in self.activeCPUsHeap:
             if cpu.job and cpu.job.isFinished():
+                # sanity check
+                # if this is not true it should have been detected before
+                assert cpu.job.deadline >= self.t
+
                 if self.verbose:
                     print("\tCPU ", cpu, "is finished")
                 cpu.job = None
@@ -230,6 +233,7 @@ class Simulator(object):  # Global multiprocessing only
         #     pdb.set_trace()
         if self.verbose:
             print("t =", self.t)
+        self.activateCPUs()
         self.cleanFinishedJobs()
         self.checkForIdleInstant()
         self.checkForStableConfig()
