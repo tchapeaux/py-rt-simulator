@@ -79,7 +79,7 @@ class Task(object):
 class TaskSystem(object):
     def __init__(self, tasks):
         self.tasks = tasks
-        self.hyperperiod = None
+        self._hyperperiod = None
         #self.hyperT = self.hyperPeriod()
 
     @staticmethod
@@ -97,16 +97,16 @@ class TaskSystem(object):
         return TaskSystem.fromText(string)
 
     def hyperPeriod(self):
-        if not self.hyperperiod:
+        if not self._hyperperiod:
             Tset = [task.T for task in self.tasks]
-            self.hyperperiod = myAlgebra.lcmArray(Tset)
-        return self.hyperperiod
+            self._hyperperiod = myAlgebra.lcmArray(Tset)
+        return self._hyperperiod
 
     def hasConstrainedDeadline(self):
-        ok = True
+        check = True
         for task in self.tasks:
-            ok = ok and task.D <= task.T
-        return ok
+            check = check and task.D <= task.T
+        return check
 
     def isSynchronous(self):
         return max([task.O for task in self.tasks]) == 0
