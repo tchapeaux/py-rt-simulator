@@ -58,13 +58,22 @@ tasks.append(Task.Task(0, 3, 11, 11, alpha=2))
 EDFNonOptimalImplicitNoIdle = Task.TaskSystem(tasks)
 
 
-# Anomaly: removing Task (0,1,2,4) renders the system unfeasible!
+# Anomaly: this system is work-conserving-schedulable. However, removing Task (0,1,2,4) renders it non-work-conserving-schedulable!
 # This is also an example of necessary idle time and non-optimality of EDF/SpotlightEDF
-tasks = []
-tasks.append(Task.Task(0, 2, 4, 4, alpha=2))
-#tasks.append(Task.Task(0, 1, 2, 4, alpha=2))
-tasks.append(Task.Task(1, 1, 1, 4, alpha=2))
-Anomaly1 = Task.TaskSystem(tasks)
+t1 = Task.Task(0, 2, 4, 4, alpha=2)
+t2 = Task.Task(0, 1, 2, 4, alpha=2)
+t3 = Task.Task(1, 1, 1, 4, alpha=2)
+AnomalyRemove = Task.TaskSystem([t1, t2, t3])
+AnomalyRemove_bis = Task.TaskSystem([t1, t3])
+
+# Anomaly: This system is EDF-feasible. However, if we use t3_bis instead of t3 (with longer deadline), the system is not EDF-feasible
+t1 = Task.Task(1, 2, 2, 7, alpha=2)
+t2 = Task.Task(0, 2, 5, 7, alpha=2)
+t3 = Task.Task(0, 1, 4, 7, alpha=2)
+t3_bis = Task.Task(0, 1, 6, 7, alpha=2)
+AnomalyLongerD = Task.TaskSystem([t1, t2, t3])
+AnomalyLongerD_bis = Task.TaskSystem([t1, t2, t3_bis])
+
 
 # # Example of non-optimality of SpotlightEDF
 # TODO: replace this system by another with same property but which does not require idling
@@ -237,13 +246,14 @@ EDFNonOptimalMultiprocessor = Task.TaskSystem(tasks)
 
 
 # RequireClairvoyance
-tasks = []
-t1 = Task.Task(22, 2, 2, 24, alpha=1)
-t2 = Task.Task(0, 5, 12, 12, alpha=1)
-t3 = Task.Task(4, 5, 6, 12, alpha=1)
+t1 = Task.Task(0, 5, 12, 12, alpha=1)
+t2 = Task.Task(4, 5, 6, 12, alpha=1)
+t3 = Task.Task(22, 2, 2, 12, alpha=1)
+t3_bis = Task.Task(10, 1, 1, 12, alpha=1)
 t4 = Task.Task(9, 1, 1, 24, alpha=1)
-tasks.extend([t1, t2, t3, t4])
-RequireClairvoyance = Task.TaskSystem(tasks)
+RequireClairvoyance = Task.TaskSystem([t1, t2, t3, t4])
+RequireClairvoyance_1 = Task.TaskSystem([t1, t2, t3_bis])
+RequireClairvoyance_2 = Task.TaskSystem([t1, t2, t4])
 clairvoyanceSchedule = [t2, t2, t2, t2, t3, t3, t3, t3, t3, t4, t2, t2, t2, t2, t2, t2, t2, t3, t3, t3, t3, t3, t1, t1]
 
 
