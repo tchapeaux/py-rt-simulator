@@ -1,4 +1,4 @@
-from simulator.scheduler import Scheduler, PMImp
+from simulator.scheduler import Scheduler, PMImp, OldAndForgotten
 
 
 def recognizeSchedulerName(name):
@@ -6,6 +6,8 @@ def recognizeSchedulerName(name):
         return Scheduler.EDF
     elif name == "PTEDF":
         return Scheduler.PTEDF
+    elif name == "PALLF":
+        return OldAndForgotten.PALLF
     elif name == "PMImp":
         return PMImp.PMImp
     elif name == "LLF":
