@@ -1,5 +1,5 @@
-class Drawer(object):
-    """Abstract drawer class used by a Simulator to display results"""
+class Reporter(object):
+    """Abstract reporter class used by a Simulator to log results"""
     def __init__(self, simu, stop):
         """param:
         - Simu is the instance of Simulator which shall be drawn
@@ -9,16 +9,16 @@ class Drawer(object):
 
     def drawInstant(self, t):
         """Draw instant t in the simulation"""
-        raise NotImplementedError("Drawer: attempted to call abstract method")
+        raise NotImplementedError("Reporter: attempted to call abstract method")
 
     def drawAbort(self, task, t):
         """Draw an abort of task at time t in the Abort/Restart model"""
-        raise NotImplementedError("Drawer: attempted to call abstract method")
+        raise NotImplementedError("Reporter: attempted to call abstract method")
 
     def drawDeadlineMiss(self, t, task):
         """Draw a deadline miss for task at time t"""
-        raise NotImplementedError("Drawer: attempted to call abstract method")
+        raise NotImplementedError("Reporter: attempted to call abstract method")
 
     def terminate(self):
         """Called at the end of the simulation"""
-        raise NotImplementedError("Drawer: attempted to call abstract method")
+        raise NotImplementedError("Reporter: attempted to call abstract method")

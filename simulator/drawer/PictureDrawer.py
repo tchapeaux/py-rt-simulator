@@ -1,11 +1,11 @@
-from simulator.drawer.Drawer import Drawer
+from simulator.drawer.Reporter import Reporter
 
 from model import algorithms
 
 
-class PictureDrawer(Drawer):
-    """Abstract Drawer which display a single picture of the execution when it stops"""
-    def __init__(self, simu, stop, showLabels=False):
+class PictureDrawer(Reporter):
+    """Abstract reporter which display a single picture of the execution when it stops"""
+    def __init__(self, simu, stop, showLabels=False, showPrio=False):
         super().__init__(simu, stop)
         self.colors = [self.preferredTaskColor()]
         self.showLabels = showLabels
@@ -134,7 +134,7 @@ class PictureDrawer(Drawer):
         y2 = self.height - self.heightMargin - taskNbr * self.taskHeight
         self.drawCircle(x, (y2 + y1) // 2, 5, self.red())
 
-    def drawOneExecutionUnit(self, taskNbr, CPUnbr, t, preemp):
+    def drawOneExecutionUnit(self, taskNbr, CPUnbr, t, prio, preemp):
         color = self.colors[CPUnbr]
         if preemp:
             color = self.greyColor(color)
@@ -144,6 +144,9 @@ class PictureDrawer(Drawer):
         x2 = self.widthMargin + (t + 1) * self.instantWidth
         y2 = self.height - self.heightMargin - taskNbr * self.taskHeight
         self.drawRectangle(x1, y1, x2, y2, outlineColor=self.black(), fillColor=color)
+
+        if self.drawPrio:
+            self.drawText(x1, yT, text, color)
 
     def drawAbort(self, task, t):
         taskNbr = self.getTaskNbr(task)
@@ -157,10 +160,11 @@ class PictureDrawer(Drawer):
         for cpuNbr, cpu in enumerate(self.simu.CPUs):
             if cpu.job:
                 taskNbr = self.getTaskNbr(cpu.job.task)
+                prio = "{:.9f}".format(cpu.job.priority)
                 if cpu in self.simu.preemptedCPUs:
-                    self.drawOneExecutionUnit(taskNbr, cpuNbr, t, preemp=True)
+                    self.drawOneExecutionUnit(taskNbr, cpuNbr, t, prio, preemp=True)
                 else:
-                    self.drawOneExecutionUnit(taskNbr, cpuNbr, t, preemp=False)
+                    self.drawOneExecutionUnit(taskNbr, cpuNbr, t, prio, preemp=False)
 
     def terminate(self):
         # self.drawGrid(self.stop)
