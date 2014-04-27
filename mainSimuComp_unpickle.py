@@ -1,11 +1,11 @@
 
-import pylab
+from matplotlib import pylab
 import pickle
 
 
 symbols = ['D', 'o', 's', '*', 'v', '^']
 with open('mainSimuComp_results.pickle', 'rb') as inputR:
-    (domin_scores, scores, NUMBER_OF_SYSTEMS, uRange, schedulers, names, generate_synchronous_only, failures) = pickle.load(inputR)
+    (domin_scores, scores, NUMBER_OF_SYSTEMS, uRange, schedulers, names, generate_synchronous_only, CDF, failures) = pickle.load(inputR)
 
 pylab.figure()
 for i, sched in enumerate(schedulers):
@@ -18,6 +18,7 @@ for i, sched in enumerate(schedulers):
 pylab.ylabel("% schedulable")
 pylab.xlabel("System utilization")
 arrivalTypeString = "synchronous" if generate_synchronous_only else "asynchronous"
+deadlineTypeString = "implicit" if CDF == 0 else "constrained-deadline"
 graph_title = "Schedulability of implicit " + arrivalTypeString + " systems (n = " + str(NUMBER_OF_SYSTEMS) + ")"
 pylab.title(graph_title)
 pylab.legend(loc=0)

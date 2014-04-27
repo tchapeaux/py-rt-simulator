@@ -1,7 +1,7 @@
 from model import algorithms
 from model import Task, TaskGenerator
 from simulator import Simulator
-from simulator.scheduler import Scheduler, LBLScheduler, PMImp
+from simulator.scheduler import Scheduler, LBLScheduler, PMImp, OldAndForgotten
 from simulator.scheduler.recognizeSchedulerName import recognizeSchedulerName
 
 import random
@@ -16,9 +16,9 @@ def oneTest(utilization):
     global generate_synchronous_only
     # print(utilization)
     Utot = utilization
-    maxHyperT = 554400
+    maxHyperT = 12600
     # maxHyperT = -1
-    Tmin = 3
+    Tmin = 5
     Tmax = 50
     n = random.randint(2, 10)
     preemptionCost = 2
@@ -37,7 +37,7 @@ def oneTest(utilization):
 
     Omax = max([task.O for task in tau.tasks])
     H = tau.hyperPeriod()
-    stop = Omax + 10 * H  # FIXME
+    stop = Omax + 4 * H  # FIXME
     successes = {}
     for schedClass in schedulers:
         if schedClass is Scheduler.ExhaustiveFixedPriority:
@@ -50,11 +50,11 @@ def oneTest(utilization):
     return utilization, successes, tau
 
 if __name__ == '__main__':
-    NUMBER_OF_SYSTEMS = 10
+    NUMBER_OF_SYSTEMS = 100
     uRange = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
-    schedulers = [PMImp.PMImp, Scheduler.ExhaustiveFixedPriority]
-    names = ["PMImp", "Meumeu"]
-    CDF = 0
+    schedulers = [OldAndForgotten.PALLF, Scheduler.EDF]
+    names = ["PALLF", "EDF"]
+    CDF = 1
     generate_synchronous_only = False
     outFilePath = "mainSimuComp_log.txt"
     pickFilePath = "mainSimuComp_results.pickle"
@@ -131,7 +131,7 @@ if __name__ == '__main__':
         print("Waiting for all threads to complete...")
 
         for i, f in enumerate(concurrent.futures.as_completed(futures)):
-            if i % (NUMBER_OF_SYSTEMS) == 0:  # this is 1/10th of the total count
+            if i % (NUMBER_OF_SYSTEMS / 10) == 0:  # this is 1/100th of the total count
                 print("Completed ", str(i), "/", NUMBER_OF_SYSTEMS * 10, " systems")
             u, success, tau = f.result()
             for sched in success.keys():
@@ -169,5 +169,5 @@ if __name__ == '__main__':
 
     print("Writing result to memory...")
     with open(pickFilePath, "wb") as output:
-        pickle.dump((domin_scores, scores, NUMBER_OF_SYSTEMS, uRange, schedulers, names, generate_synchronous_only, failures), output, pickle.HIGHEST_PROTOCOL)
+        pickle.dump((domin_scores, scores, NUMBER_OF_SYSTEMS, uRange, schedulers, names, generate_synchronous_only, CDF, failures), output, pickle.HIGHEST_PROTOCOL)
         print("Done.")
