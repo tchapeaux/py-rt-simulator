@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Py-rt-simulator by tchapeaux</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Py-rt-simulator</h1>
+        <p>Real-time System Simulator written in Python, mostly for my own use</p>
+
+        <p class="view"><a href="https://github.com/tchapeaux/py-rt-simulator">View the Project on GitHub <small>tchapeaux/py-rt-simulator</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/tchapeaux/py-rt-simulator/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/tchapeaux/py-rt-simulator/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/tchapeaux/py-rt-simulator">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a name="pyrtss" class="anchor" href="#pyrtss"><span class="octicon octicon-link"></span></a>PyRTSS</h1>
+
+<p>Python Real-Time System Simulator, developed during my final year of Master to help me with my <a href="http://www.thomaschapeaux.be/assets/Master_Thesis.pdf">Master Thesis</a> on the integration of preemption costs.</p>
+
+<h2>
+<a name="dependencies" class="anchor" href="#dependencies"><span class="octicon octicon-link"></span></a>Dependencies</h2>
+
+<ul>
+<li>GLPK v4.45+, see <a href="http://www.gnu.org/software/glpk/">http://www.gnu.org/software/glpk/</a> or use the provided installer in /GLPK/</li>
+<li>pycairo module for displaying the simulator result</li>
+<li>matplotlib module in some scripts</li>
+</ul><h2>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<p>Systems can be described in a text file. An example is provided in <code>/systems/task_example.system</code></p>
+
+<ul>
+<li><p>To launch the simulator on a given system: <code>python3 mainSimu.py -sys path/of/input_file -sched NAME_OF_SCHEDULER</code></p></li>
+<li>
+<p>To compare two schedulers on a given number of systems: <code>python3 mainSimuComp.py</code>. Parameters:</p>
+
+<ul>
+<li>
+<code>sched1</code> : Name of the supposed 'best' schedulers</li>
+<li>
+<code>sched2</code> : Name of the supposed 'worst' schedulers</li>
+<li>
+<code>writeVict</code> : Log systems scheduled by 1 but not by 2 (1/0, def: 0)</li>
+<li>
+<code>writeFail</code> : Log systems scheduled by 2 but not by 1 (1/0, def: 0)</li>
+<li>
+<code>o</code> : log file (default: " + outFilePath + "</li>
+<li>
+<code>p</code> : pickle file (default: " + pickFilePath + "</li>
+<li>
+<code>n</code> : number of systems per data point (def: 1000)</li>
+<li>
+<code>synchr</code> : generate synchronous system only (1/0 def: 0)</li>
+<li>
+<code>cdf</code> : float value of the CDF (0: implicit, 1: fully constrained)</li>
+</ul>
+</li>
+<li><p>To calculate the C-space of a given system: <code>python3 mainCspace.py path/of/input_file</code></p></li>
+<li><p>To launch tests <code>python3 runtests.py</code></p></li>
+</ul>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/tchapeaux">tchapeaux</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
