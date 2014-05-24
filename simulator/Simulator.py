@@ -10,7 +10,7 @@ def heappeek(heap):
     return heap[0] if len(heap) > 0 else None
 
 
-def getLaunchedSimu(tau, sched, nbrCPUs=1, stop=None, verbose=False, drawing=False):
+def getLaunchedSimu(tau, sched, nbrCPUs=1, stop=None, verbose=False, drawing=False, stopAtDeadlineMiss=True, stopAtStableConfig=True):
     """
         Return an instance of Simulator having run tau with sched
     """
@@ -27,7 +27,7 @@ def getLaunchedSimu(tau, sched, nbrCPUs=1, stop=None, verbose=False, drawing=Fal
         tau, stop, nbrCPUs=nbrCPUs, scheduler=sched, abortAndRestart=False,
         verbose=verbose, drawing=drawing
     )
-    simulator.run()
+    simulator.run(stopAtDeadlineMiss, stopAtStableConfig)
     return simulator
 
 
@@ -149,10 +149,6 @@ class Simulator(object):  # Global multiprocessing only
     def cleanFinishedJobs(self):
         for cpu in self.activeCPUsHeap:
             if cpu.job and cpu.job.isFinished():
-                # sanity check
-                # if this is not true it should have been detected before
-                assert cpu.job.deadline >= self.t
-
                 if self.verbose:
                     print("\tCPU ", cpu, "is finished")
                 cpu.job = None
@@ -202,7 +198,7 @@ class Simulator(object):  # Global multiprocessing only
                 self.preemptedCPUs.add(preemptedCPU)
             else:
                 heappush(self.activeCPUsHeap, preemptedCPU)
-            if preemptiveJob.preempted:
+            if preemptiveJob.preempted:  # can probably be put in earlier "if"
                 preemptiveJob.preempted = False
 
             # put the preempted job back in the active job heap
