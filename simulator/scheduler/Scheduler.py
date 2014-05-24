@@ -31,15 +31,18 @@ class SchedulerDP(object):
 
 
 class LLF(SchedulerDP):
-    def __init__(self, tau):
+    def __init__(self, tau, preemptionAware=True):
         super().__init__(tau)
         self.prioOffset = max([task.C for task in tau.tasks]) + 1
         self.tau = tau
+        self.preemptionAware = preemptionAware
 
     def priority(self, job, simu):
         # Is LLF supposed to be aware of the added preemption cost?
         # Here we suppose that yes
         slackTime = max(0, job.deadline - (simu.t + job.computationLeft()))
+        if not self.preemptionAware and self.isJobExecuting(job, simu):
+            slackTime += job.alpha()
         return 1 / (self.prioOffset + slackTime)
 
     def preemptEqualPriorities(self):
@@ -207,6 +210,7 @@ class ExhaustiveFixedPriority(FixedPriority):
 
 
 class RM(SchedulerFTP):
+
     def orderPriorities(self, taskArray):
         priorities = []
         for task in taskArray:
@@ -216,3 +220,9 @@ class RM(SchedulerFTP):
             if task not in priorities:
                 priorities.append(task)
         return priorities
+
+
+class DM(SchedulerFTP):
+
+    def orderPriorities(self, taskArray):
+        return sorted(taskArray, key=lambda t: t.D)
