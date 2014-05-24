@@ -10,12 +10,15 @@ import re
 
 class PILDrawer(PictureDrawer):
     def __init__(self, simu, stop):
+        self.scale = 10
         super().__init__(simu, stop)
 
     def custom_init(self):
-        self.outImg = img.new("RGB", (self.width, self.height), "white")
-        self.fontRoboto = ImageFont.truetype("res/Roboto-Medium.ttf", 9)
+        self.outImg = img.new("RGB", (self.scale * self.width, self.scale * self.height), "white")
+        fontSize = 9 * self.scale
+        self.fontRoboto = ImageFont.truetype("res/Roboto-Medium.ttf", fontSize)
         self.outDraw = draw.Draw(self.outImg)
+
 
     def randomColor(self):
         return "rgb(" + ",".join([str(random.randint(0, 255)) for i in range(3)]) + ")"
@@ -29,11 +32,15 @@ class PILDrawer(PictureDrawer):
         return "rgb(" + ",".join([str(c) for c in rgbGrey]) + ")"
 
     def drawArrow(self, x1, y1, x2, y2, color):
-        self.drawLine(x1, y1, x2, y2, width=2, color=color)
+        # do not use scale as drawLine and drawCircle already do
         r = 2
+        self.drawLine(x1, y1, x2, y2, width=2, color=color)
         self.drawCircle(x2, y2, r, color)
 
-    def drawText(self, xT, yT, text, color):
+    def drawText(self, xT, yT, text, size, color):
+        xT *= self.scale
+        yT *= self.scale
+        size *= self.scale
         self.outDraw.text((xT, yT), str(text), font=self.fontRoboto, fill=color)
 
     def black(self):
@@ -55,12 +62,24 @@ class PILDrawer(PictureDrawer):
         return "blue"
 
     def drawLine(self, x1, y1, x2, y2, width, color):
+        x1 *= self.scale
+        y1 *= self.scale
+        x2 *= self.scale
+        y2 *= self.scale
+        width *= self.scale
         self.outDraw.line([x1, y1, x2, y2], width=width, fill=color)
 
     def drawRectangle(self, x1, y1, x2, y2, fillColor, outlineColor):
+        x1 *= self.scale
+        y1 *= self.scale
+        x2 *= self.scale
+        y2 *= self.scale
         self.outDraw.rectangle([x1, y1, x2, y2], outline=outlineColor, fill=fillColor)
 
     def drawCircle(self, xC, yC, rad, color):
+        xC *= self.scale
+        yC *= self.scale
+        rad *= self.scale
         self.outDraw.ellipse([xC - rad, yC - rad, xC + rad, yC + rad], fill=color)
 
     def terminate(self):
