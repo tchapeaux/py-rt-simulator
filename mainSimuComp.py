@@ -8,7 +8,7 @@ import random
 import pickle
 import concurrent.futures
 import sys
-
+import subprocess
 
 def oneTest(utilization):
     global schedulers
@@ -16,7 +16,7 @@ def oneTest(utilization):
     global generate_synchronous_only
     # print(utilization)
     Utot = utilization
-    maxHyperT = 12600
+    maxHyperT = 6300
     # maxHyperT = -1
     Tmin = 5
     Tmax = 50
@@ -52,8 +52,8 @@ def oneTest(utilization):
 if __name__ == '__main__':
     NUMBER_OF_SYSTEMS = 100
     uRange = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
-    schedulers = [OldAndForgotten.PALLF, Scheduler.EDF]
-    names = ["PALLF", "EDF"]
+    schedulers = [OldAndForgotten.PALLF, Scheduler.ExhaustiveFixedPriority]
+    names = ["PALLF", "Meumeu's"]
     CDF = 1
     generate_synchronous_only = False
     outFilePath = "mainSimuComp_log.txt"
@@ -171,3 +171,11 @@ if __name__ == '__main__':
     with open(pickFilePath, "wb") as output:
         pickle.dump((domin_scores, scores, NUMBER_OF_SYSTEMS, uRange, schedulers, names, generate_synchronous_only, CDF, failures), output, pickle.HIGHEST_PROTOCOL)
         print("Done.")
+
+    # Ok so I want to display a notification but I'm lazy, so here's the best I got
+    # (only works on Ubuntu, hopefully fail gracefully on other platforms)
+    if "linux" in sys.platform:
+        try:
+            subprocess.Popen(['notify-send', "mainSimuComp over!"])
+        except Exception:
+            pass
