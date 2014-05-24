@@ -4,16 +4,19 @@ from model import algorithms
 
 
 class PictureDrawer(Reporter):
+
     """Abstract reporter which display a single picture of the execution when it stops"""
-    def __init__(self, simu, stop, showLabels=False, showPrio=False):
+
+    def __init__(self, simu, stop, showLabels=True, showPrio=False):
         super().__init__(simu, stop)
         self.colors = [self.preferredTaskColor()]
         self.showLabels = showLabels
+        self.showPrio = showPrio
         if self.simu.m > 1:
             self.colors += [self.randomColor() for j in range(self.simu.m - 1)]
-        self.instantWidth = 20
+        self.instantWidth = 10
         self.widthMargin = 20
-        self.taskHeight = 40
+        self.taskHeight = 20
         self.heightMargin = 30
         self.width = (stop + 1) * self.instantWidth + 2 * self.widthMargin
         self.height = len(simu.system.tasks) * self.taskHeight + 2 * self.heightMargin
@@ -72,7 +75,7 @@ class PictureDrawer(Reporter):
         """draw a circle centered at (xC, yC) of radius rad"""
         raise NotImplementedError("PictureDrawer: attempted to call abstract method")
 
-    def drawText(self, xT, yT, text, color):
+    def drawText(self, xT, yT, text, size, color):
         """Print text at coordinate (xT, yT)"""
         raise NotImplementedError("PictureDrawer: attempted to call abstract method")
 
@@ -107,7 +110,7 @@ class PictureDrawer(Reporter):
             # timeline markers
             if i % 5 == 0:
                 self.drawLine(x, y, x, y + 10, width=1, color=self.black())
-                self.drawText(x + 3, y + 3, str(i), color=self.black())
+                self.drawText(x + 3, y + 3, str(i), size=10, color=self.black())
         # special timeline markers - Omax + k H
         H = self.simu.system.hyperPeriod()
         y = self.height - self.heightMargin
@@ -124,7 +127,7 @@ class PictureDrawer(Reporter):
                     textString = specialName
                     if i > 0:
                         textString += " + " + str(i) + " H"
-                    self.drawText(x + 3, y + 15, textString, color=self.black())
+                    self.drawText(x + 3, y + 15, textString, size=10, color=self.black())
                     i += 1
 
     def drawDeadlineMiss(self, t, task):
@@ -145,8 +148,8 @@ class PictureDrawer(Reporter):
         y2 = self.height - self.heightMargin - taskNbr * self.taskHeight
         self.drawRectangle(x1, y1, x2, y2, outlineColor=self.black(), fillColor=color)
 
-        if self.drawPrio:
-            self.drawText(x1, yT, text, color)
+        if self.showPrio:
+            self.drawText(x1, y2 - (y2 - y1)/2, str(round(prio, 2)), size=5, color=self.black())
 
     def drawAbort(self, task, t):
         taskNbr = self.getTaskNbr(task)
@@ -160,7 +163,7 @@ class PictureDrawer(Reporter):
         for cpuNbr, cpu in enumerate(self.simu.CPUs):
             if cpu.job:
                 taskNbr = self.getTaskNbr(cpu.job.task)
-                prio = "{:.9f}".format(cpu.job.priority)
+                prio = cpu.job.priority
                 if cpu in self.simu.preemptedCPUs:
                     self.drawOneExecutionUnit(taskNbr, cpuNbr, t, prio, preemp=True)
                 else:
