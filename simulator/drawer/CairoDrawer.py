@@ -7,6 +7,7 @@ import random
 
 
 class CairoDrawer(PictureDrawer):
+
     def __init__(self, simu, stop):
         super().__init__(simu, stop)
 
@@ -67,11 +68,11 @@ class CairoDrawer(PictureDrawer):
         r = 2
         self.drawCircle(x2, y2, r, color)
 
-    def drawText(self, xT, yT, text, color):
+    def drawText(self, xT, yT, text, size, color):
         yT += 6  # quickfix: cairo draws the text centered on yT rather than top-left
         self.ctx.set_source_rgb(*color)
         self.ctx.select_font_face("serif", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_NORMAL)
-        self.ctx.set_font_size(10)
+        self.ctx.set_font_size(size)
         self.ctx.move_to(xT, yT)
         self.ctx.show_text(text)
 
