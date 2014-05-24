@@ -10,9 +10,14 @@ import subprocess
 import sys
 
 # default parameters
-tau = systems.ImpRequireIdle
-schedName = "PTEDF"
-stop = 13  # None for default value
+# tau = systems.LimitedPreemptionExample
+# with open("systems/task_example2.system") as f:
+#     tau = Task.TaskSystem.fromFile(f)
+tasks = [Task.Task(0, 5, 11, 11, 3), Task.Task(4, 1, 1, 11, 3), Task.Task(6, 4, 11, 11, 3)]
+tau = Task.TaskSystem(tasks)
+schedName = "EDF"
+# stop = tau.omax() + 10 * tau.hyperPeriod()  # None for default value
+stop = 45
 
 # Read user parameters
 helpString = \
@@ -59,10 +64,16 @@ if schedClass == Scheduler.ExhaustiveFixedPriority:
 else:
     scheduler = schedClass(tau)
 
-# scheduler = Scheduler.ArbitraryScheduler(tau, systems.ImpPTEFTNonOptimalsched)
+# Short circuit for arbitrary scheduler (use if you know what you're doing)
+# schedule = [
+#     tau.tasks[2],
+#     tau.tasks[1],
+#     tau.tasks[1],
+#     ]
+# scheduler = Scheduler.ArbitraryScheduler(tau, schedule)
 
 try:
-    simu = Simulator.getLaunchedSimu(tau, scheduler, stop=stop, verbose=True, drawing=True)
+    simu = Simulator.getLaunchedSimu(tau, scheduler, stop=stop, verbose=False, drawing=True, stopAtDeadlineMiss=False, stopAtStableConfig=False)
     if simu.success():
         print("Success.")
     else:
