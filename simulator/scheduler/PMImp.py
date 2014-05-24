@@ -36,6 +36,7 @@ class PMImp(Scheduler.SchedulerDP):
             A problem arise here if simu.t + cumulExecTimeLeft is greater than
             a future deadline. We then have undefined behavior.
             Solution to dominate EDF: recognize this case and do as EDF then.
+            => Except that does not work because EDF may have had a different behavior before
         """
         for waitingJ in sortedWJ:
             if self.getLaxity(waitingJ, simu) - cumulExecTimeLeft <= 0:

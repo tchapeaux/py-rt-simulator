@@ -1,8 +1,5 @@
 Python Real-Time Systems Simulator
 ==================================
-by Thomas Chapeaux
-
-Some initial help by Paul Rodriguez
 
 Dependencies
 ------------
