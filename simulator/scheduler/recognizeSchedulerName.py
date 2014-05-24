@@ -2,6 +2,8 @@ from simulator.scheduler import Scheduler, PMImp, OldAndForgotten
 
 
 def recognizeSchedulerName(name):
+    if name == "DM":
+        return Scheduler.DM
     if name == "EDF":
         return Scheduler.EDF
     elif name == "PTEDF":
@@ -10,6 +12,8 @@ def recognizeSchedulerName(name):
         return OldAndForgotten.PALLF
     elif name == "PMImp":
         return PMImp.PMImp
+    elif name == "CKEDF":
+        return OldAndForgotten.ChooseKeepEDF
     elif name == "LLF":
         return Scheduler.LLF
     elif name == "Meumeu":
