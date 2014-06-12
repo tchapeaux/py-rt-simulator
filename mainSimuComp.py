@@ -71,7 +71,7 @@ if __name__ == '__main__':
         -o : log file (default: " + outFilePath + "\n\
         -p : pickle file (default: " + pickFilePath + "\n\
         -n : number of systems per data point (def: 1000)\n\
-        -synchr : generate synchronous system only (1/0 def: 0)\
+        -synchr : generate synchronous system only (1/0 def: 0)\n\
         -cdf : float value of the CDF (0: implicit, 1: fully constrained) \
         "
     argv = sys.argv[1:]

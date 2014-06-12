@@ -3,6 +3,8 @@ PyRTSS
 
 Python Real-Time System Simulator, developed during my final year of Master to help me with my [Master Thesis](http://www.thomaschapeaux.be/assets/Master_Thesis.pdf) on the integration of preemption costs.
 
+Some code was developed with the help of [Paul Rodriguez](http://github.com/Kafein).
+
 Dependencies
 ------------
 
