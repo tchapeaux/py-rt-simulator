@@ -2,16 +2,19 @@ from simulator.drawer.Reporter import Reporter
 
 from model import algorithms
 
+import math
+
 
 class PictureDrawer(Reporter):
 
     """Abstract reporter which display a single picture of the execution when it stops"""
 
-    def __init__(self, simu, stop, showLabels=True, showPrio=False):
-        super().__init__(simu, stop)
-        self.colors = [self.preferredTaskColor()]
+    def __init__(self, simu, stop, showLabels=True, showPrio=False, blackandwhite=False):
         self.showLabels = showLabels
         self.showPrio = showPrio
+        self.blackandwhite = blackandwhite
+        super().__init__(simu, stop)
+        self.colors = [self.preferredTaskColor()]
         if self.simu.m > 1:
             self.colors += [self.randomColor() for j in range(self.simu.m - 1)]
         self.instantWidth = 10
@@ -67,10 +70,6 @@ class PictureDrawer(Reporter):
         """draw a rectangle parallel to the axes whose top-left corner is (x1, y1) and bottom-right corner is (x2, y2)"""
         raise NotImplementedError("PictureDrawer: attempted to call abstract method")
 
-    def drawArrow(self, x1, y1, x2, y2, color):
-        """draw an arrow from (x1, y1) to (x2, y2)"""
-        raise NotImplementedError("PictureDrawer: attempted to call abstract method")
-
     def drawCircle(self, xC, yC, rad, color):
         """draw a circle centered at (xC, yC) of radius rad"""
         raise NotImplementedError("PictureDrawer: attempted to call abstract method")
@@ -90,6 +89,12 @@ class PictureDrawer(Reporter):
                 taskNbr = i
                 break
         return taskNbr
+
+    def drawArrow(self, x, y1, y2, color):
+        r = 1.5
+        direction = (y2 - y1) / math.fabs(y2 - y1)
+        self.drawLine(x , y1 + r * direction, x, y2 - r * direction, width=1, color=color)
+        self.drawCircle(x, y2 - r * direction, r, color)
 
     def drawGrid(self, stop):
         self.drawLine(self.widthMargin, self.height - self.heightMargin, self.widthMargin + self.instantWidth * (stop + 1), self.height - self.heightMargin, width=1, color=self.black())
@@ -135,7 +140,8 @@ class PictureDrawer(Reporter):
         x = self.widthMargin + t * self.instantWidth
         y1 = self.height - self.heightMargin - (taskNbr + 1) * self.taskHeight
         y2 = self.height - self.heightMargin - taskNbr * self.taskHeight
-        self.drawCircle(x, (y2 + y1) // 2, 5, self.red())
+        color = self.black() if self.blackandwhite else self.red()
+        self.drawCircle(x, (y2 + y1) // 2, 5, color)
 
     def drawOneExecutionUnit(self, taskNbr, CPUnbr, t, prio, preemp):
         color = self.colors[CPUnbr]
@@ -179,8 +185,10 @@ class PictureDrawer(Reporter):
                 x1 = self.widthMargin + t * self.instantWidth
                 y1 = self.height - self.heightMargin - taskNbr * self.taskHeight
                 # arrivals
-                self.drawArrow(x1, y1 - (self.taskHeight // 2), x1, y1 - self.taskHeight, self.blue())
+                arrivalColor = self.black() if self.blackandwhite else self.blue()
+                self.drawArrow(x1, y1 - (self.taskHeight // 2), y1 - self.taskHeight, arrivalColor)
                 # deadlines
                 t += task.D
                 x2 = self.widthMargin + t * self.instantWidth
-                self. drawArrow(x2, y1 - (self.taskHeight) // 2, x2, y1, self.red())
+                deadlineColor = self.black() if self.blackandwhite else self.red()
+                self. drawArrow(x2, y1 - (self.taskHeight) // 2, y1, deadlineColor)

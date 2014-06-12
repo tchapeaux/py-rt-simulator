@@ -25,7 +25,10 @@ class CairoDrawer(PictureDrawer):
         return (1, 1, 1)
 
     def preferredTaskColor(self):
-        return (218 / 255, 165 / 255, 32 / 255)
+        if self.blackandwhite:
+            return (162 / 255, 205 / 255, 90 / 255)
+        else:
+            return (218 / 255, 165 / 255, 32 / 255)
 
     def gray(self):
         return (0.6, 0.6, 0.6)
@@ -62,11 +65,6 @@ class CairoDrawer(PictureDrawer):
         self.ctx.set_source_rgb(*color)
         self.ctx.arc(xC, yC, rad, 0, 2 * math.pi)
         self.ctx.fill()
-
-    def drawArrow(self, x1, y1, x2, y2, color):
-        self.drawLine(x1, y1, x2, y2, width=2, color=color)
-        r = 2
-        self.drawCircle(x2, y2, r, color)
 
     def drawText(self, xT, yT, text, size, color):
         yT += 6  # quickfix: cairo draws the text centered on yT rather than top-left

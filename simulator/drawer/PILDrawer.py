@@ -31,12 +31,6 @@ class PILDrawer(PictureDrawer):
         rgbGrey = [c // 2 for c in rgb]
         return "rgb(" + ",".join([str(c) for c in rgbGrey]) + ")"
 
-    def drawArrow(self, x1, y1, x2, y2, color):
-        # do not use scale as drawLine and drawCircle already do
-        r = 2
-        self.drawLine(x1, y1, x2, y2, width=2, color=color)
-        self.drawCircle(x2, y2, r, color)
-
     def drawText(self, xT, yT, text, size, color):
         xT *= self.scale
         yT *= self.scale
@@ -50,7 +44,10 @@ class PILDrawer(PictureDrawer):
         return "white"
 
     def preferredTaskColor(self):
-        return "rgb(218, 165, 32)"
+        if self.blackandwhite:
+            return "rgb(162, 205, 90)"
+        else:
+            return "rgb(218, 165, 32)"
 
     def gray(self):
         return "gray"
@@ -83,6 +80,7 @@ class PILDrawer(PictureDrawer):
         self.outDraw.ellipse([xC - rad, yC - rad, xC + rad, yC + rad], fill=color)
 
     def terminate(self):
+        self.drawGrid(self.stop)
         super().terminate()
         self.outImg.save("out.png")
 
